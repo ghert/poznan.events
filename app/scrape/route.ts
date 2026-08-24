@@ -40,7 +40,7 @@ export async function GET(request: Request) {
       format: 'json',
       uncompressed_webhook: 'true',
       notify: 'true',
-      limit_per_input: '3',
+      limit_per_input: '10',
       endpoint: `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/webhook`,
       auth_header: `Bearer ${process.env.WEBHOOK_SECRET}`,
       type: "discover_new",
