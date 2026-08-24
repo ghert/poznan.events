@@ -39,7 +39,9 @@ export async function GET(request: Request) {
       dataset_id: process.env.BRIGHTDATA_DATASET_ID!,
       format: 'json',
       uncompressed_webhook: 'true',
-      notify: `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/webhook/`,
+      notify: 'true',
+      limit_per_input: '3',
+      endpoint: `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/webhook`,
       auth_header: `Bearer ${process.env.WEBHOOK_SECRET}`,
       type: "discover_new",
       discover_by: "venue"
