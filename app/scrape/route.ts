@@ -28,10 +28,10 @@ export async function GET(request: Request) {
     if (last) {
       const hoursSince = (Date.now() - new Date(last.triggered_at).getTime()) / 3_600_000;
       if (hoursSince < MIN_HOURS_BETWEEN_RUNS) {
-        return NextResponse.json({
-          skipped: true,
-          hoursSinceLastRun: Math.round(hoursSince),
-        });
+        // return NextResponse.json({
+        //   skipped: true,
+        //   hoursSinceLastRun: Math.round(hoursSince),
+        // });
       }
     }
 
