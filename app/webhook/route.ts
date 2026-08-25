@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
-import { VENUES } from "@/lib/sources";
+import { SCRAPE_INPUTS } from "@/lib/sources";
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -23,7 +23,10 @@ interface Row {
   location: {
     address: string;
   },
-  hosts: {name: string}[]
+  hosts: { name: string }[],
+  discovery_input: {
+    url: string;
+  }
 }
 
 /**
@@ -45,7 +48,7 @@ function normalize(row: Row): ScrapedEvent | null {
     return Number.isNaN(d.getTime()) ? null : d.toISOString();
   };
 
-  const findVenue = (row: Row): string => row.hosts.findLast(host => VENUES.includes(host.name))?.name || "";
+  const findVenue = (row: Row): string => SCRAPE_INPUTS?.findLast(input => input.url === row.discovery_input.url)?.venue || '';
 
   return {
     sourceId: row.event_id,
@@ -53,7 +56,7 @@ function normalize(row: Row): ScrapedEvent | null {
     title: str(row.title) || '',
     startsAt: toDate(row.event_date),
     endsAt: toDate(row.event_date),
-    venueName: findVenue(row) || '',
+    venueName: findVenue(row),
     address: str(row.location?.address)
   };
 }

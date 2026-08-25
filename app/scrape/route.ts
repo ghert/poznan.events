@@ -58,7 +58,7 @@ export async function GET(request: Request) {
         Authorization: `Bearer ${process.env.BRIGHTDATA_API_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(SCRAPE_INPUTS),
+      body: JSON.stringify(SCRAPE_INPUTS.map((input) => ({url: input.url, upcoming_events_only: true}))),
     });
 
     const body = await res.text();
