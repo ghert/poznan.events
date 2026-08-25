@@ -9,18 +9,23 @@ export default function EventsList({ events }: { events: ScrapedEventFromDB[] })
   const nextWeekEnd = addWeeks(thisWeekEnd, 1);
   const nextWeek = events.filter(event => !!event.starts_at && isAfter(event.starts_at, thisWeekEnd) && isBefore(event.starts_at, nextWeekEnd))
   const later = events.filter(event => !!event.starts_at && isAfter(event.starts_at, nextWeekEnd))
+
+  const sortBy = (eventA: ScrapedEventFromDB, eventB: ScrapedEventFromDB) => {
+    return (!!eventA.starts_at && !!eventB.starts_at) ? eventA.starts_at > eventB.starts_at ? 1 : -1 : 0;
+  }
+
   return (
     <div>
       <h3 className="text-2xl mt-4">This week</h3>
-      {thisWeek.map(event => (
+      {thisWeek.sort(sortBy).map(event => (
         <p key={event.source_id}>({event.starts_at ? formatDate(event.starts_at, "dd/MM") : ""}) {event.title}</p>
       ))}
       <h3 className="text-2xl mt-4">Next week</h3>
-      {nextWeek.map(event => (
+      {nextWeek.sort(sortBy).map(event => (
         <p key={event.source_id}>({event.starts_at ? formatDate(event.starts_at, "dd/MM") : ""}) {event.title}</p>
       ))}
       <h3 className="text-2xl mt-4">Later</h3>
-      {later.map(event => (
+      {later.sort(sortBy).map(event => (
         <p key={event.source_id}>({event.starts_at ? formatDate(event.starts_at, "dd/MM") : ""}) {event.title}</p>
       ))}
     </div>
