@@ -1,4 +1,4 @@
-interface ScrapeInput {
+export interface ScrapeInput {
   url: string;
   upcoming_events_only: boolean;
   venue: string;
