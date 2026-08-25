@@ -13,7 +13,7 @@ export default function Filters(
     <div className="flex-row">
       {isOpen ? (
           Object.entries(filters).map(([venue, value]) => (
-            <label className="label w-1/3" key={venue}>
+            <label className="label w-1/3 max-md:w-1/2" key={venue}>
               <input type="checkbox" className="toggle" checked={value} onChange={() => setFilter(venue, !value)} />
               {venue}
             </label>
