@@ -6,14 +6,8 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-
-
 /**
  * Maps one raw Bright Data row to our schema.
- *
- * IMPORTANT: the field names below are guesses. On your first real run, look at
- * the logged payload in the Vercel dashboard and correct them. The fallbacks
- * mean a wrong guess produces nulls rather than a crash.
  */
 function normalize(row: Row): ScrapedEvent | null {
   const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : null);
@@ -47,15 +41,12 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 
 export async function POST(request: Request) {
-  // if (request.headers.get('authorization') !== `Bearer ${process.env.WEBHOOK_SECRET}`) {
-  //   return new NextResponse('Unauthorized', { status: 401 });
-  // }
+  if (request.headers.get('authorization') !== `Bearer ${process.env.WEBHOOK_SECRET}`) {
+    return new NextResponse('Unauthorized', { status: 401 });
+  }
 
   try {
     const payload = await request.json();
-
-    // Uncomment on your first run to discover the real field names:
-    // console.log('brightdata payload sample', JSON.stringify(payload?.[0] ?? payload));
 
     const rows: Row[] = Array.isArray(payload) ? payload : [payload];
     const events = rows
