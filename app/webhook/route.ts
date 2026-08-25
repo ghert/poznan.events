@@ -1,33 +1,12 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { SCRAPE_INPUTS } from "@/lib/sources";
+import { Row, ScrapedEvent } from '@/lib/types';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-type ScrapedEvent = {
-  sourceId: string;
-  sourceUrl: string;
-  title: string;
-  startsAt: string | null;
-  endsAt: string | null;
-  venueName: string | null;
-  address: string | null;
-};
 
-interface Row {
-  event_id: string;
-  url: string;
-  event_date: string;
-  title: string;
-  location: {
-    address: string;
-  },
-  hosts: { name: string }[],
-  discovery_input: {
-    url: string;
-  }
-}
 
 /**
  * Maps one raw Bright Data row to our schema.
