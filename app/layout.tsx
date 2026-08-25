@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Poznań events",
+  title: "poznan.events",
   description: "Music events in Poznań. Wydarzenia muzyczne w Poznaniu.",
 };
 
