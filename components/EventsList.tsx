@@ -49,7 +49,8 @@ export default function EventsList({ events }: { events: ScrapedEventFromDB[] })
       ))}
       {event && event.image ? (
       <div>
-        <img src={event.image} alt="event" />
+          <img src={event.image} alt="event" />
+          <p>{event.description}</p>
       </div>) : null}
     </div>
   )

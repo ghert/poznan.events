@@ -60,17 +60,19 @@ export async function POST(request: Request) {
         batch.map(
           (e) => sql`
             insert into events
-              (source_id, source_url, title, starts_at, ends_at, venue_name, address, last_seen_at, is_active)
+              (source_id, source_url, title, starts_at, ends_at, venue_name, address, last_seen_at, is_active, image, description)
             values
               (${e.sourceId}, ${e.sourceUrl}, ${e.title}, ${e.startsAt}, ${e.endsAt},
-               ${e.venueName}, ${e.address}, now(), true)
+               ${e.venueName}, ${e.address}, now(), true, ${e.image}, ${e.description})
             on conflict (source_id) do update set
               source_url   = excluded.source_url,
               title        = excluded.title,
               starts_at    = excluded.starts_at,
               ends_at      = excluded.ends_at,
               venue_name   = excluded.venue_name,
-              address         = excluded.address,
+              address      = excluded.address,
+              image        = excluded.image,
+              description  = excluded.description,
               last_seen_at = now(),
               is_active    = true
           `,
