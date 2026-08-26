@@ -38,4 +38,5 @@ export interface Row {
     text: string;
   },
   main_image_downloadable: string;
+  unformatted_description_text: string;
 }
