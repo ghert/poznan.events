@@ -26,6 +26,48 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.logo {
+  --wave-color: 0, 255, 127;
+  background-image: linear-gradient(90deg,
+    rgba(var(--wave-color), 0.40) 0%,
+    rgba(var(--wave-color), 0.35) 3%,
+    rgba(var(--wave-color), 0.28) 9%,
+    rgba(var(--wave-color), 0.22) 15%,
+    rgba(var(--wave-color), 0.16) 18%,
+    rgba(var(--wave-color), 0.12) 26%,
+    rgba(var(--wave-color), 0.08) 35%,
+    rgba(var(--wave-color), 0.05) 44%,
+    rgba(var(--wave-color), 0.02) 47%,
+    rgba(var(--wave-color), 0.00) 50%,
+    rgba(var(--wave-color), 0.02) 53%,
+    rgba(var(--wave-color), 0.05) 56%,
+    rgba(var(--wave-color), 0.08) 65%,
+    rgba(var(--wave-color), 0.12) 74%,
+    rgba(var(--wave-color), 0.16) 82%,
+    rgba(var(--wave-color), 0.22) 85%,
+    rgba(var(--wave-color), 0.28) 91%,
+    rgba(var(--wave-color), 0.35) 97%,
+    rgba(var(--wave-color), 0.40) 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: repeat-x;
+  animation: wave-drift 5s linear infinite;
+}
+
+@keyframes wave-drift {
+  from { background-position: 200% 0; }
+  to   { background-position: 0% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo { animation: none; }
+}
+
+.logo {
+    padding: 12px;
+    border-radius: 12px;
+}
+
 html {
   scroll-behavior: smooth;
 }
