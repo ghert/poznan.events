@@ -71,11 +71,12 @@ export default function EventsList({ events }: { events: ScrapedEventFromDB[] })
           </figure>
           <div className="card-body">
             <div>
-            <button className="btn btn-soft" onClick={() => {
-                window.open(event.source_url, '_blank');
-              }}>Open link</button>
-            </div>
-            <p>{event.description}</p>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="badge badge-soft badge-xl">{ event.venue_name}</div>
+                {event.starts_at ? <div className="badge badge-soft badge-xl">{formatDate(event.starts_at, "dd/MM/yy HH:MM")}</div> : null}
+                </div>
+              </div>
+              <p dangerouslySetInnerHTML={{ __html: event.description.replaceAll("\n", "<br/>") }}></p>
           </div>
       </div>) : null}
     </div>
