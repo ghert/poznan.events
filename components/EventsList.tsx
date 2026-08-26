@@ -1,6 +1,6 @@
 "use client";
 import {formatDate, isThisWeek, endOfWeek, addWeeks, isAfter, isBefore} from "date-fns"
-
+import { tz } from '@date-fns/tz';
 import { ScrapedEventFromDB } from "@/lib/types";
 import Filters from "./Filters";
 import { SCRAPE_INPUTS } from "@/lib/sources";
@@ -73,10 +73,12 @@ export default function EventsList({ events }: { events: ScrapedEventFromDB[] })
             <div>
               <div className="flex items-center gap-4 mb-4">
                 <div className="badge badge-soft badge-xl">{ event.venue_name}</div>
-                {event.starts_at ? <div className="badge badge-soft badge-xl">{formatDate(event.starts_at, "dd/MM/yy HH:MM")}</div> : null}
+                {event.starts_at ? <div className="badge badge-soft badge-xl">{formatDate(event.starts_at, "dd/MM/yy HH:mm", {
+                  in: tz('Europe/Warsaw')
+                })}</div> : null}
                 </div>
               </div>
-              <p dangerouslySetInnerHTML={{ __html: event.description.replaceAll("\n", "<br/>") }}></p>
+            <p className="whitespace-pre-line">{event.description}</p>
           </div>
       </div>) : null}
     </div>
