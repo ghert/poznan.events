@@ -6,6 +6,8 @@ export interface ScrapedEvent {
   endsAt: string | null;
   venueName: string | null;
   address: string | null;
+  image: string;
+  description: string;
 };
 
 export interface ScrapedEventFromDB {
@@ -16,6 +18,8 @@ export interface ScrapedEventFromDB {
   ends_at: string | null;
   venue_name: string | null;
   address: string | null;
+  image: string;
+  description: string;
 };
 
 export interface Row {
@@ -29,5 +33,9 @@ export interface Row {
   hosts: { name: string }[],
   discovery_input: {
     url: string;
-  }
+  },
+  description: {
+    text: string;
+  },
+  main_image_downloadable: string;
 }

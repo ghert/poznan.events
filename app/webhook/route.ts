@@ -30,7 +30,9 @@ function normalize(row: Row): ScrapedEvent | null {
     startsAt: toDate(row.event_date),
     endsAt: toDate(row.event_date),
     venueName: findVenue(row),
-    address: str(row.location?.address)
+    address: str(row.location?.address),
+    description: row.description.text || "",
+    image: row.main_image_downloadable || ""
   };
 }
 

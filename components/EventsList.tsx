@@ -13,7 +13,7 @@ export default function EventsList({ events }: { events: ScrapedEventFromDB[] })
   const nextWeekEnd = addWeeks(thisWeekEnd, 1);
   const nextWeek = events.filter(event => !!event.starts_at && isAfter(event.starts_at, thisWeekEnd) && isBefore(event.starts_at, nextWeekEnd))
   const later = events.filter(event => !!event.starts_at && isAfter(event.starts_at, nextWeekEnd))
-
+  const [event, setEvent] = useState<ScrapedEventFromDB | null>(null);
   const sortBy = (eventA: ScrapedEventFromDB, eventB: ScrapedEventFromDB) => {
     return (!!eventA.starts_at && !!eventB.starts_at) ? eventA.starts_at > eventB.starts_at ? 1 : -1 : 0;
   }
@@ -37,16 +37,20 @@ export default function EventsList({ events }: { events: ScrapedEventFromDB[] })
       <Filters filters={filters} setFilter={setFilter} />
       <h3 className="text-2xl mt-4">This week</h3>
       {thisWeek.sort(sortBy).filter(filterOut).map(event => (
-        <EventsListItem key={event.source_id} event={event} />
+        <EventsListItem key={event.source_id} event={event} onClick={() => setEvent(event)} />
       ))}
       <h3 className="text-2xl mt-4">Next week</h3>
       {nextWeek.sort(sortBy).filter(filterOut).map(event => (
-        <EventsListItem key={event.source_id} event={event} />
+        <EventsListItem key={event.source_id} event={event} onClick={() => setEvent(event)}/>
       ))}
       <h3 className="text-2xl mt-4">Later</h3>
       {later.sort(sortBy).filter(filterOut).map(event => (
-        <EventsListItem key={event.source_id} event={event} />
+        <EventsListItem key={event.source_id} event={event} onClick={() => setEvent(event)}/>
       ))}
+      {event && event.image ? (
+      <div>
+        <img src={event.image} alt="event" />
+      </div>) : null}
     </div>
   )
 }
