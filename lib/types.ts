@@ -11,6 +11,7 @@ export interface ScrapedEvent {
 };
 
 export interface ScrapedEventFromDB {
+  id: string;
   source_id: string;
   source_url: string;
   title: string;
