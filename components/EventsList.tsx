@@ -1,13 +1,12 @@
 "use client";
-import {formatDate, isThisWeek, endOfWeek, addWeeks, isAfter, isBefore} from "date-fns"
-import { tz } from '@date-fns/tz';
+import { isThisWeek, endOfWeek, addWeeks, isAfter, isBefore} from "date-fns"
 import { ScrapedEventFromDB } from "@/lib/types";
-import Filters from "./Filters";
-import { SCRAPE_INPUTS } from "@/lib/sources";
-import { useCallback, useState } from "react";
 import EventsListItem from "./EventsListItem";
+import { usePathname } from "next/navigation";
 
 export default function EventsList({ events }: { events: ScrapedEventFromDB[] }) {
+  const pathname = usePathname();
+  const currentId = pathname.match(/^\/event\/(\d+)/)?.[1] ?? NaN;
   const thisWeek = events.filter(event => !!event.starts_at && isThisWeek(event.starts_at));
   const thisWeekEnd = endOfWeek(new Date());
   const nextWeekEnd = addWeeks(thisWeekEnd, 1);
@@ -16,20 +15,19 @@ export default function EventsList({ events }: { events: ScrapedEventFromDB[] })
   const sortBy = (eventA: ScrapedEventFromDB, eventB: ScrapedEventFromDB) => {
     return (!!eventA.starts_at && !!eventB.starts_at) ? eventA.starts_at > eventB.starts_at ? 1 : -1 : 0;
   }
-
   return (
     <div className="w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full">
-      <h3 className="text-2xl mt-4">This week</h3>
+      <h3 className="text-2xl">This week</h3>
       {thisWeek.sort(sortBy).map(event => (
-        <EventsListItem key={event.source_id} event={event}  />
+        <EventsListItem key={event.source_id} event={event} enabled={event.id == currentId}  />
       ))}
       <h3 className="text-2xl mt-4">Next week</h3>
       {nextWeek.sort(sortBy).map(event => (
-        <EventsListItem key={event.source_id} event={event} />
+        <EventsListItem key={event.source_id} event={event} enabled={event.id == currentId}/>
       ))}
       <h3 className="text-2xl mt-4">Later</h3>
       {later.sort(sortBy).map(event => (
-        <EventsListItem key={event.source_id} event={event} />
+        <EventsListItem key={event.source_id} event={event} enabled={event.id == currentId}/>
       ))}
     </div>
   )
