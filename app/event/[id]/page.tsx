@@ -14,6 +14,18 @@ export async function generateStaticParams() {
   return (rows as { id: string }[]).map((r) => ({ id: r.id }));
 }
 
+export async function generateMetadata({ params }: Params) {
+  const { id } = await params;
+  const event = await getEvent(id);
+  if (!event) return { title: 'Nie znaleziono wydarzenia' };
+
+  return {
+    title: `${event.title}}`,
+    description: `${event.title}, ${event.venue_name ?? 'Poznań'}.`,
+    alternates: { canonical: `/event/${event.id}` },
+  };
+}
+
 export default async function EventPage({ params }: Params) {
   const { id } = await params;
   const event = await getEvent(id);
@@ -29,6 +41,7 @@ export default async function EventPage({ params }: Params) {
         </figure>
         <div className="card-body">
           <div>
+            <h2 className="text-2xl mb-4">{event.title}</h2>
             <div className="flex items-center gap-4 mb-4">
               <div className="badge badge-soft badge-xl">{ event.venue_name}</div>
               {event.starts_at ? <div className="badge badge-soft badge-xl">{formatDate(event.starts_at, "dd/MM/yy HH:mm", {
