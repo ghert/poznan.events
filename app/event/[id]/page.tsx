@@ -4,6 +4,7 @@ import { getEvent } from "@/lib/getEvent";
 import { ScrapedEventFromDB } from "@/lib/types";
 import { tz } from "@date-fns/tz";
 import { formatDate } from "date-fns";
+import { Metadata } from "next";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -14,13 +15,13 @@ export async function generateStaticParams() {
   return (rows as { id: string }[]).map((r) => ({ id: r.id }));
 }
 
-export async function generateMetadata({ params }: Params) {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { id } = await params;
   const event = await getEvent(id);
   if (!event) return { title: 'Nie znaleziono wydarzenia' };
 
   return {
-    title: `${event.title}}`,
+    title: `${event.title}`,
     description: `${event.title}, ${event.venue_name ?? 'Poznań'}.`,
     alternates: { canonical: `/event/${event.id}` },
   };
