@@ -1,4 +1,5 @@
 import EventsList from "@/components/EventsList";
+import ScrollTo from "@/components/ScrollTo";
 import { sql } from "@/lib/db";
 import { getEvent } from "@/lib/getEvent";
 import { ScrapedEventFromDB } from "@/lib/types";
@@ -34,6 +35,7 @@ export default async function EventPage({ params }: Params) {
     select * from events
   `;
   return <>
+    <ScrollTo trigger={id} />
     <EventsList events={events as ScrapedEventFromDB[]} />
     {event ? (
       <div className="card bg-base-100 shadow-sm w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-8">
