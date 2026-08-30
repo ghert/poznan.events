@@ -22,15 +22,15 @@ export default function EventsList({
   }
   return (
     <div className="w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full">
-      <h3 className="text-2xl">Ten tydzień</h3>
+      <h3 className="text-2xl mb-1">Ten tydzień</h3>
       {thisWeek.sort(sortBy).map(event => (
         <EventsListItem key={event.source_id} event={event} enabled={event.id == currentId}  />
       ))}
-      <h3 className="text-2xl mt-4">Następny tydzień</h3>
+      <h3 className="text-2xl mt-4 mb-1">Następny tydzień</h3>
       {nextWeek.sort(sortBy).map(event => (
         <EventsListItem key={event.source_id} event={event} enabled={event.id == currentId}/>
       ))}
-      <h3 className="text-2xl mt-4">Dalej</h3>
+      <h3 className="text-2xl mt-4 mb-1">Dalej</h3>
       {later.sort(sortBy).map(event => (
         <EventsListItem key={event.source_id} event={event} enabled={event.id == currentId}/>
       ))}
