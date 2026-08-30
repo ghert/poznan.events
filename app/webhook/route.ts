@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 /**
- * Maps one raw Bright Data row to our schema.
+ * Maps one raw Bright Data row to our schema
  */
 function normalize(row: Row): ScrapedEvent | null {
   const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : null);
@@ -36,6 +36,20 @@ function normalize(row: Row): ScrapedEvent | null {
   };
 }
 
+function toRecord(e: ScrapedEvent) {
+  return {
+    source_id: e.sourceId,
+    source_url: e.sourceUrl,
+    title: e.title,
+    starts_at: e.startsAt,
+    ends_at: e.endsAt,
+    venue_name: e.venueName,
+    address: e.address,
+    description: e.description,
+    image: e.image,
+  };
+}
+
 function chunk<T>(items: T[], size: number): T[][] {
   const out: T[][] = [];
   for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
@@ -49,39 +63,63 @@ export async function POST(request: Request) {
 
   try {
     const payload = await request.json();
-
     const rows: Row[] = Array.isArray(payload) ? payload : [payload];
+
     const events = rows
       .map(normalize)
       .filter((e): e is ScrapedEvent => e !== null);
 
-    for (const batch of chunk(events, 100)) {
-      await sql.transaction(
-        batch.map(
-          (e) => sql`
-            insert into events
-              (source_id, source_url, title, starts_at, ends_at, venue_name, address, last_seen_at, is_active, image, description)
-            values
-              (${e.sourceId}, ${e.sourceUrl}, ${e.title}, ${e.startsAt}, ${e.endsAt},
-               ${e.venueName}, ${e.address}, now(), true, ${e.image}, ${e.description})
-            on conflict (source_id) do update set
-              source_url   = excluded.source_url,
-              title        = excluded.title,
-              starts_at    = excluded.starts_at,
-              ends_at      = excluded.ends_at,
-              venue_name   = excluded.venue_name,
-              address      = excluded.address,
-              image        = excluded.image,
-              description  = excluded.description,
-              last_seen_at = now(),
-              is_active    = true
-          `,
-        ),
-      );
+    // Discovery can return the same event from two different venue inputs.
+    // Two rows with the same source_id in one statement would collide, so
+    // collapse them first — last one wins.
+    const unique = [...new Map(events.map((e) => [e.sourceId, e])).values()];
+
+    for (const batch of chunk(unique, 25)) {
+      const json = JSON.stringify(batch.map(toRecord));
+
+      await sql.transaction([
+        // 1 Update existing rows
+        sql`
+          update events e set
+            source_url   = v.source_url,
+            title        = v.title,
+            starts_at    = v.starts_at::timestamptz,
+            ends_at      = v.ends_at::timestamptz,
+            venue_name   = v.venue_name,
+            address      = v.address,
+            description  = v.description,
+            image        = v.image,
+            last_seen_at = now(),
+            is_active    = true
+          from jsonb_to_recordset(${json}::jsonb)
+            as v(
+            source_id text, source_url text, title text, starts_at text,
+            ends_at text, venue_name text, address text, description text, image text
+          )
+          where e.source_id = v.source_id
+        `,
+
+        // Insert only the ones that don't exist yet
+        sql`
+          insert into events
+            (source_id, source_url, title, starts_at, ends_at,
+             venue_name, address, description, image, last_seen_at, is_active)
+          select v.source_id, v.source_url, v.title,
+                 v.starts_at::timestamptz, v.ends_at::timestamptz,
+                 v.venue_name, v.address, v.description, v.image, now(), true
+          from jsonb_to_recordset(${json}::jsonb)
+            as v(
+            source_id text, source_url text, title text, starts_at text,
+            ends_at text, venue_name text, address text, description text, image text
+          )
+          where not exists (
+            select 1 from events e where e.source_id = v.source_id
+          )
+          on conflict (source_id) do nothing
+        `,
+      ]);
     }
 
-    // Anything we haven't seen in two collection cycles is probably cancelled
-    // or removed — hide it rather than deleting, so you can debug later.
     await sql`
       update events
       set is_active = false
@@ -92,7 +130,7 @@ export async function POST(request: Request) {
       update scrape_runs
       set status = 'delivered',
           completed_at = now(),
-          events_received = ${events.length}
+          events_received = ${unique.length}
       where id = (
         select id from scrape_runs
         where status = 'triggered'
@@ -101,7 +139,11 @@ export async function POST(request: Request) {
       )
     `;
 
-    return NextResponse.json({ ok: true, received: rows.length, stored: events.length });
+    return NextResponse.json({
+      ok: true,
+      received: rows.length,
+      stored: unique.length,
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     await sql`
