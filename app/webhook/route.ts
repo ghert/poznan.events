@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { SCRAPE_INPUTS } from "@/lib/sources";
 import { Row, ScrapedEvent } from '@/lib/types';
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 /**

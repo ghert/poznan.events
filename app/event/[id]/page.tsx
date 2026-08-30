@@ -1,11 +1,12 @@
+import EventDetails from "@/components/EventDetails";
 import EventsList from "@/components/EventsList";
-import ScrollTo from "@/components/ScrollTo";
 import { sql } from "@/lib/db";
 import { getEvent } from "@/lib/getEvent";
+import { getEvents } from "@/lib/getEvents";
+import { getWeekBoundaries } from "@/lib/getWeekBoundaries";
 import { ScrapedEventFromDB } from "@/lib/types";
-import { tz } from "@date-fns/tz";
-import { formatDate } from "date-fns";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -29,31 +30,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function EventPage({ params }: Params) {
-  const { id } = await params;
-  const event = await getEvent(id);
-  const events = await sql`
-    select * from events
-  `;
+  const events = await getEvents();
+  const weekBoundaries = await getWeekBoundaries();
   return <>
-    <ScrollTo trigger={id} />
-    <EventsList events={events as ScrapedEventFromDB[]} />
-    {event ? (
-      <div className="card bg-base-100 shadow-sm w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-8">
-        <figure className={`max-h-72 overflow-hidden`}>
-          <img key={event.image} src={event.image} alt="event" />
-        </figure>
-        <div className="card-body">
-          <div>
-            <h2 className="text-2xl mb-4">{event.title}</h2>
-            <div className="flex items-center gap-4 mb-4">
-              <div className="badge badge-soft badge-xl">{ event.venue_name}</div>
-              {event.starts_at ? <div className="badge badge-soft badge-xl">{formatDate(event.starts_at, "dd/MM/yy HH:mm", {
-                in: tz('Europe/Warsaw')
-              })}</div> : null}
-              </div>
-            </div>
-          <p className="whitespace-pre-line">{event.description}</p>
-        </div>
-    </div>) : null}
+
+    <EventsList events={events as ScrapedEventFromDB[]} weekBoundaries={weekBoundaries} />
+    <Suspense fallback={
+      <div className="my-8 justify-center flex"><span className="loading loading-ring loading-xl"></span></div>}>
+      <EventDetails params={params} />
+    </Suspense>
   </>
 }

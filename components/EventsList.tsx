@@ -1,17 +1,20 @@
 "use client";
-import { isThisWeek, endOfWeek, addWeeks, isAfter, isBefore} from "date-fns"
+import { isAfter, isBefore } from "date-fns"
 import { ScrapedEventFromDB } from "@/lib/types";
 import { usePathname } from "next/navigation";
-import { tz } from "@date-fns/tz";
 import EventsListItem from "./EventsListItem";
 
-
-export default function EventsList({ events }: { events: ScrapedEventFromDB[] }) {
+export default function EventsList({
+  events, weekBoundaries: { start, end, nextEnd } }: {
+    events: ScrapedEventFromDB[],
+    weekBoundaries: { start: string, end: string, nextEnd: string }
+  }) {
   const pathname = usePathname();
   const currentId = pathname.match(/^\/event\/(\d+)/)?.[1] ?? NaN;
-  const thisWeek = events.filter(event => !!event.starts_at && isThisWeek(event.starts_at, { weekStartsOn: 1, in: tz('Europe/Warsaw') }));
-  const thisWeekEnd = endOfWeek(new Date(), { weekStartsOn: 1 });
-  const nextWeekEnd = addWeeks(thisWeekEnd, 1);
+  const thisWeekStart = new Date(start);
+  const thisWeekEnd = new Date(end);
+  const nextWeekEnd = new Date(nextEnd);
+  const thisWeek = events.filter(e => !!e.starts_at && isAfter(e.starts_at, thisWeekStart) && isBefore(e.starts_at, thisWeekEnd));
   const nextWeek = events.filter(event => !!event.starts_at && isAfter(event.starts_at, thisWeekEnd) && isBefore(event.starts_at, nextWeekEnd))
   const later = events.filter(event => !!event.starts_at && isAfter(event.starts_at, nextWeekEnd))
   const sortBy = (eventA: ScrapedEventFromDB, eventB: ScrapedEventFromDB) => {

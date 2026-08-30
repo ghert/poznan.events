@@ -2,9 +2,6 @@ import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { SCRAPE_INPUTS } from '@/lib/sources';
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
 // Vercel's Hobby plan only fires cron jobs once per day, so we run daily and
 // skip the run if we already collected recently. 40h rather than 48h so a
 // slightly early trigger doesn't cause us to skip a whole day.
