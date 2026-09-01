@@ -1,5 +1,6 @@
 import ScrollTo from "./ScrollTo";
 import { getEvent } from "@/lib/getEvent";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export default async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
@@ -22,13 +23,21 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
       <div className="card-body">
         <div>
           <h2 className="text-2xl mb-4">{event.title}</h2>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="badge badge-soft badge-xl">{ event.venue_name}</div>
-            {event.starts_at ? <div className="badge badge-soft badge-xl">
+          <div className="flex items-center gap-4 mb-1">
+            <div className="badge badge-neutral badge-xl">{ event.venue_name}</div>
+            {event.starts_at ? <div className="badge badge-neutral badge-xl">
               {dateFmt.format(new Date(event.starts_at))}
             </div> : null}
             </div>
-          </div>
+        </div>
+        <div className="mb-4">
+          <a href={event.source_url}>
+            <div className="badge badge-soft badge-xl text-sm">
+              {event.source_url.replace("https://www.", "")}
+              <ExternalLink size="16" />
+            </div>
+          </a>
+        </div>
         <p className="whitespace-pre-line">{event.description}</p>
       </div>
       </div>
