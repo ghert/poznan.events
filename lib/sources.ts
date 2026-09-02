@@ -14,5 +14,6 @@ export const SCRAPE_INPUTS: ScrapeInput[] = [
   { url: "https://www.facebook.com/Rewiry.Klub/events", "upcoming_events_only": true, venue: "Rewiry" },
   { url: "https://www.facebook.com/profile.php?id=61585209215495&sk=events", "upcoming_events_only": true, venue: "Roose Jazz" },
   { url: "https://www.facebook.com/kolorkingmuzyczny/events", "upcoming_events_only": true, venue: "Kołorking muzyczny" },
-  { url: "https://www.facebook.com/2progi/events", "upcoming_events_only": true, venue: "2 Progi"}
+  { url: "https://www.facebook.com/2progi/events", "upcoming_events_only": true, venue: "2 Progi" },
+  { url: "https://www.facebook.com/domtramwajarzapoznan/events", "upcoming_events_only": true, venue: "Dom tramwajarza"}
 ];
