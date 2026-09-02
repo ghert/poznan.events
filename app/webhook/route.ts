@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { SCRAPE_INPUTS } from "@/lib/sources";
 import { Row, ScrapedEvent } from '@/lib/types';
+import { revalidatePath } from 'next/cache';
 export const maxDuration = 60;
 
 /**
@@ -136,6 +137,9 @@ export async function POST(request: Request) {
         limit 1
       )
     `;
+
+    revalidatePath("/");
+    revalidatePath("/event/[id]", "page");
 
     return NextResponse.json({
       ok: true,
