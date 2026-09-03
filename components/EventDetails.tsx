@@ -20,20 +20,28 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
       <figure className={`max-h-72 overflow-hidden`}>
         <img key={event.image} src={event.image} alt="event" />
       </figure>
-      <div className="card-body">
+      <div className="card-body max-md:px-4">
         <div>
           <h2 className="text-2xl mb-4">{event.title}</h2>
           <div className="flex items-center gap-4 mb-1">
-            <div className="badge badge-neutral badge-xl">{ event.venue_name}</div>
-            {event.starts_at ? <div className="badge badge-neutral badge-xl">
-              {dateFmt.format(new Date(event.starts_at))}
-            </div> : null}
+            <div className="badge badge-neutral badge-xl min-w-0">
+              <span className="truncate">
+                {event.venue_name}
+              </span>
+            </div>
+            {event.starts_at ? (
+              <div className="badge badge-neutral badge-xl shrink-0">
+                {dateFmt.format(new Date(event.starts_at))}
+              </div>
+            ) : null}
             </div>
         </div>
-        <div className="mb-4">
-          <a href={event.source_url}>
-            <div className="badge badge-soft badge-xl text-sm">
-              {event.source_url.replace("https://www.", "")}
+        <div>
+          <a className="mb-4 flex" href={event.source_url}>
+            <div className="badge badge-soft badge-xl text-sm min-w-0 max-w-full">
+              <span className="truncate">
+                {event.source_url.replace("https://www.", "")}
+              </span>
               <ExternalLink size="16" />
             </div>
           </a>
