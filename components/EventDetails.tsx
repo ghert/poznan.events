@@ -37,9 +37,9 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
             </div>
         </div>
         <div>
-          <a className="mb-4 flex" href={event.source_url}>
+          <a className="mb-4 inline-block group" href={event.source_url}>
             <div className="badge badge-soft badge-xl text-sm min-w-0 max-w-full">
-              <span className="truncate">
+              <span className="truncate group-hover:underline">
                 {event.source_url.replace("https://www.", "")}
               </span>
               <ExternalLink size="16" />

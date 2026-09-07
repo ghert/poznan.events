@@ -1,12 +1,14 @@
+"use client";
 import { ScrapedEventFromDB } from "@/lib/types";
 import Link from "next/link";
 import { useCallback } from "react";
 
 export default function EventsListItem(
-  { event, enabled }:
+  { event, enabled, basePath = "" }:
   {
       event: ScrapedEventFromDB,
-      enabled: boolean
+      enabled: boolean,
+      basePath?: string;
   }) {
   const dateFormat = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Europe/Warsaw', day: '2-digit', month: '2-digit',
@@ -19,7 +21,7 @@ export default function EventsListItem(
   }, [])
 
   return <p className="text-nowrap text-ellipsis truncate">
-    <Link href={`/event/${event.id}`} scroll={false} onClick={onClick}>
+    <Link href={`${basePath}/event/${event.id}`} scroll={false} onClick={onClick}>
       <span className={`hover:underline cursor-pointer  ${enabled ? "font-bold" : "none"}`} key={event.source_id}>
         ({event.starts_at ? dateFormat.format(new Date(event.starts_at)) : ""}){" "}
         {event.title}

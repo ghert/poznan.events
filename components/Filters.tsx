@@ -1,25 +1,23 @@
-import { useState } from "react";
+"use client";
+import { SCRAPE_INPUTS } from "@/lib/sources";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import slugify from "slugify"
 
-export default function Filters(
-  { filters, setFilter }: {
-    filters: { [k: string]: boolean },
-    setFilter: (venue: string, value: boolean) => void
-  }) {
-  const [isOpen, setOpen] = useState(false);
+
+function Filter({venue, enabled}: {venue: string, enabled: boolean}) {
+  return <Link href={`/venue/${slugify(venue, {lower: true})}`}>
+    <div className={`badge badge-ghost rounded-2xl p-4 cursor-pointer text-nowrap hover:bg-blue-200 ${enabled ? "bg-blue-500 text-white" : ""}`} key={venue}>{venue}</div>
+  </Link>;
+}
+
+export default function Filters() {
+  const pathname = usePathname();
+  const currentVenue = pathname.match(/^\/venue\/([^/]+)/)?.[1] ?? null;
 
   return (
-    <div>
-      <button className="btn btn-soft mb-4" onClick={() => setOpen(isOpen => !isOpen)}>Filters</button>
-    <div className="flex-row">
-      {isOpen ? (
-          Object.entries(filters).map(([venue, value]) => (
-            <label className="label w-1/3 mb-2 max-md:w-1/2" key={venue}>
-              <input type="checkbox" className="toggle" checked={value} onChange={() => setFilter(venue, !value)} />
-              {venue}
-            </label>
-          ))
-        ) : null}
-      </div>
+    <div className="flex gap-1 mb-4">
+      {SCRAPE_INPUTS.map(item => (<Filter key={item.venue} venue={item.venue} enabled={slugify(item.venue, {lower: true}) === currentVenue} />))}
     </div>
   )
 }
