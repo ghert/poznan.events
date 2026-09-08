@@ -1,7 +1,8 @@
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 export async function getNow() {
   'use cache';
-  cacheLife('hours');
+  cacheLife('days');
+  cacheTag('events');
   return new Date();
 }

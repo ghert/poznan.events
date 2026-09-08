@@ -1,11 +1,11 @@
 import { sql } from '@/lib/db';
 import { ScrapedEventFromDB } from './types';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 
 export async function getEvent(id: string): Promise<ScrapedEventFromDB | null> {
-
   'use cache';
-  cacheLife('hours');
+  cacheLife('days');
+  cacheTag('events');
   const rows = await sql`
     select *
     from events

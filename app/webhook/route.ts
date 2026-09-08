@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { SCRAPE_INPUTS } from "@/lib/sources";
 import { Row, ScrapedEvent } from '@/lib/types';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 export const maxDuration = 60;
 
 /**
@@ -138,8 +138,8 @@ export async function POST(request: Request) {
       )
     `;
 
-    revalidatePath("/");
-    revalidatePath("/event/[id]", "page");
+    revalidateTag('events', 'days');
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({
       ok: true,
