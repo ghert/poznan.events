@@ -7,7 +7,7 @@ import slugify from "slugify"
 
 function Filter({venue, enabled}: {venue: string, enabled: boolean}) {
   return <Link href={`/venue/${slugify(venue, {lower: true})}`}>
-    <div className={`badge badge-ghost rounded-2xl p-4 cursor-pointer text-nowrap hover:bg-blue-200 ${enabled ? "bg-blue-500 text-white" : ""}`} key={venue}>{venue}</div>
+    <div className={`badge badge-ghost rounded-2xl p-4 cursor-pointer text-nowrap dark:hover:bg-indigo-900 hover:bg-indigo-200 ${enabled ? "bg-indigo-500 text-white" : ""}`} key={venue}>{venue}</div>
   </Link>;
 }
 

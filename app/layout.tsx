@@ -18,6 +18,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`h-full antialiased`}
+      data-scroll-behavior="smooth"
     >
       <head>
         <script defer src="https://cloud.umami.is/script.js" data-website-id="23f5f38d-c2c3-42f8-b2f3-1c8a4de698c1"></script>
@@ -26,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
       <div className="flex flex-col flex-1  bg-zinc-50 font-sans dark:bg-black">
           <main className="flex flex-1 w-full flex-col px-16 py-8 max-md:p-4 bg-white dark:bg-black sm:items-start">
-            <Link href="/"><h2 className="logo mb-8 font-bold text-4xl">poznan.events 🌀</h2></Link>
+            <Link href="/"><h2 className="logo mb-8 font-bold text-4xl">poznan.events</h2></Link>
             <Filters />
           <div className="flex flex-row w-full items-start max-md:flex-col-reverse gap-4">
             {children}
