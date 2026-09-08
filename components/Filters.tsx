@@ -16,7 +16,7 @@ export default function Filters() {
   const currentVenue = pathname.match(/^\/venue\/([^/]+)/)?.[1] ?? null;
 
   return (
-    <div className="flex gap-1 mb-4">
+    <div className="flex gap-1 mb-4 overflow-scroll">
       {SCRAPE_INPUTS.map(item => (<Filter key={item.venue} venue={item.venue} enabled={slugify(item.venue, {lower: true}) === currentVenue} />))}
     </div>
   )
