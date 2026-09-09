@@ -15,7 +15,7 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
   });
 
   return (
-    <div className="card bg-base-100 shadow-sm w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-8">
+    <div className="card bg-base-100 shadow-sm w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-4">
       <ScrollTo trigger={id} />
       <figure className={`max-h-72 overflow-hidden`}>
         <img key={event.image} src={event.image} alt="event" />
