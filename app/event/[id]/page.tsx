@@ -1,6 +1,5 @@
 import EventDetails from "@/components/EventDetails";
 import EventsList from "@/components/EventsList";
-import { sql } from "@/lib/db";
 import { getEvent } from "@/lib/getEvent";
 import { getEvents } from "@/lib/getEvents";
 import { getWeekBoundaries } from "@/lib/getWeekBoundaries";
@@ -11,10 +10,8 @@ import { Suspense } from "react";
 type Params = { params: Promise<{ id: string }> };
 
 export async function generateStaticParams() {
-  const rows = await sql`
-    select id from events where is_active and starts_at > now()
-  `;
-  return (rows as { id: string }[]).map((r) => ({ id: r.id }));
+  const events = await getEvents()
+  return events.map((r) => ({ id: r.id }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {

@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import EventsListSimple from '@/components/EventsListSimple';
-import { getVenueEvents } from '@/lib/getVenueEvents';
 import { getVenues } from '@/lib/getVenues';
 
 type Props = { children: ReactNode; params: Promise<{ slug: string }> };
