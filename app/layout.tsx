@@ -5,6 +5,8 @@ import "./globals.css";
 import { CirclePlus} from "lucide-react";
 import Filters from "@/components/Filters";
 import Link from "next/link";
+import Footer from "@/components/Footer";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const GeistSans = Geist();
 
@@ -19,26 +21,37 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`h-full antialiased`}
       data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const stored = localStorage.getItem('theme');
+                const theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.classList.toggle('dark', theme === 'dark');
+              })();
+            `,
+          }}
+        />
         <script defer src="https://cloud.umami.is/script.js" data-website-id="23f5f38d-c2c3-42f8-b2f3-1c8a4de698c1"></script>
       </head>
-      <body className={`min-h-full flex flex-col scroll-smooth ${GeistSans.className}`}>
-
-      <div className="flex flex-col flex-1  bg-zinc-50 font-sans dark:bg-black">
-          <main className="flex flex-1 w-full flex-col px-16 py-8 max-md:p-4 bg-white dark:bg-black sm:items-start">
-            <Link href="/"><h2 className="logo mb-2 font-bold text-4xl">poznan.events</h2></Link>
+      <body className={`min-h-full flex flex-col scroll-smooth bg-background ${GeistSans.className} px-8 max-sm:px-4`}>
+        <div className="flex flex-col flex-1 font-sans w-full max-w-7xl m-auto py-8">
+          <main className="m-auto flex flex-1 w-full flex-col sm:items-start">
+            <div className="flex justify-between items-center w-full">
+              <Link href="/"><h2 className="logo mb-2 font-bold text-4xl">poznan.events</h2></Link>
+              <ThemeToggle />
+            </div>
             <Filters />
-          <div className="flex flex-row w-full items-start max-md:flex-col-reverse gap-4">
-            {children}
-          </div>
+            <div className="flex flex-row w-full items-start max-md:flex-col-reverse gap-4">
+              {children}
+            </div>
           </main>
         </div>
-        <footer className="footer sm:footer-horizontal footer-center p-4">
-          <aside>
-            <p><a className="hover:underline" href="https://filipprzydryga.xyz">filipprzydryga.xyz ✉️</a></p>
-          </aside>
-        </footer>
+        <Footer />
       </body>
       <Analytics />
     </html>
