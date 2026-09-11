@@ -1,6 +1,6 @@
 import ScrollTo from "./ScrollTo";
 import { getEvent } from "@/lib/getEvent";
-import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export default async function EventDetails({ params }: { params: Promise<{ id: string }> }) {

@@ -42,7 +42,7 @@ export default function ThemeToggle() {
   };
 
   return (
-    <label className="swap swap-rotate">
+    <label className="swap swap-rotate p-1">
       <input
         type="checkbox"
         onChange={toggleTheme}

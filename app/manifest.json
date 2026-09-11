@@ -1,0 +1,14 @@
+{
+  "name": "poznan.events",
+  "short_name": "poznan.events",
+  "description": "Wydarzenia w poznaniu",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    }
+  ]
+}

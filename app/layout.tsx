@@ -24,6 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
+        <link rel="apple-touch-icon" href="/icon.png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
