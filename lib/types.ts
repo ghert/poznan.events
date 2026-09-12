@@ -27,6 +27,7 @@ export interface Row {
   event_id: string;
   url: string;
   event_date: string;
+  event_end_date?: string;
   title: string;
   location: {
     address: string;

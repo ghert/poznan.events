@@ -27,7 +27,7 @@ function normalize(row: Row): ScrapedEvent | null {
     sourceUrl: str(row.url) || '',
     title: str(row.title) || '',
     startsAt: toDate(row.event_date),
-    endsAt: toDate(row.event_date),
+    endsAt: row.event_end_date ? toDate(row.event_end_date) : toDate(row.event_date),
     venueName: findVenue(row),
     address: str(row.location?.address),
     description: row.unformatted_description_text || "",

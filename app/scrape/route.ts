@@ -42,11 +42,6 @@ export async function GET(request: Request) {
       auth_header: `Bearer ${process.env.WEBHOOK_SECRET}`,
       type: "discover_new",
       discover_by: "venue"
-
-      // For a discovery-type scraper, also add:
-      // type: 'discover_new',
-      // discover_by: 'location',
-      // limit_per_input: '50',
     });
 
     const res = await fetch(`https://api.brightdata.com/datasets/v3/trigger?${params}`, {

@@ -9,7 +9,7 @@ export async function getVenueEvents(venue: string): Promise<ScrapedEventFromDB[
   cacheTag('events');
   cacheLife('days');
   const rows = await sql`
-    select * from events where is_active and starts_at > now()
+    select * from events where is_active and ends_at > now()
   `;
 
   const venueEvents = rows.filter(row => venue === slugify(row.venue_name, {lower: true}))
