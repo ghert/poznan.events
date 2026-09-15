@@ -41,7 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className={`min-h-full flex flex-col scroll-smooth bg-background ${GeistSans.className} px-8 max-sm:px-4`}>
         <div className="flex flex-col flex-1 font-sans w-full max-w-7xl m-auto py-8">
-          <main className="m-auto flex flex-1 w-full flex-col sm:items-start">
+          <main className="m-auto flex flex-1 w-full flex-col">
             <div className="flex justify-between items-center w-full">
               <Link href="/"><h2 className="logo mb-2 font-bold text-4xl">poznan.events</h2></Link>
               <ThemeToggle />
