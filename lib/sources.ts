@@ -14,9 +14,10 @@ export const SCRAPE_INPUTS: ScrapeInput[] = [
   { url: "https://www.facebook.com/Rewiry.Klub/events", "upcoming_events_only": true, venue: "Rewiry" },
   { url: "https://www.facebook.com/profile.php?id=61585209215495&sk=events", "upcoming_events_only": true, venue: "Roose Jazz" },
   { url: "https://www.facebook.com/kolorkingmuzyczny/events", "upcoming_events_only": true, venue: "Kołorking muzyczny" },
-  { url: "https://www.facebook.com/2progi/events", "upcoming_events_only": true, venue: "2 Progi" },
+  { url: "https://www.facebook.com/2progi /events", "upcoming_events_only": true, venue: "2 Progi" },
   { url: "https://www.facebook.com/domtramwajarzapoznan/events", "upcoming_events_only": true, venue: "Dom tramwajarza" },
   { url: "https://www.facebook.com/profile.php?id=61588025085089&sk=events", "upcoming_events_only": true, venue: "Filter" },
   { url: "https://www.facebook.com/maf.crew.ukr/events", "upcoming_events_only": true, venue: "MAF" },
-  { url: "https://www.facebook.com/profile.php?id=100075921021676&sk=events", "upcoming_events_only": true, venue: "Zinek" }
+  { url: "https://www.facebook.com/profile.php?id=100075921021676&sk=events", "upcoming_events_only": true, venue: "Zinek" },
+  { url: "https://www.facebook.com/pawilonpoznan/events", "upcoming_events_only": true, venue: "Pawilon" }
 ];
