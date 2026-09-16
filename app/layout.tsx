@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
-import { CirclePlus} from "lucide-react";
 import Filters from "@/components/Filters";
 import Link from "next/link";
 import Footer from "@/components/Footer";
@@ -12,7 +11,7 @@ const GeistSans = Geist();
 
 export const metadata: Metadata = {
   title: "poznan.events",
-  description: "Koncerty i imprezy w Poznaniu w jednym miejscu. Tama, Blue Note, Schron i inne — aktualizowane codziennie.",
+  description: "Wydarzenia i koncerty w Poznaniu w jednym miejscu. Aktualizowane codziennie.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -40,10 +39,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script defer src="https://cloud.umami.is/script.js" data-website-id="23f5f38d-c2c3-42f8-b2f3-1c8a4de698c1"></script>
       </head>
       <body className={`min-h-full flex flex-col scroll-smooth bg-background ${GeistSans.className} px-8 max-sm:px-4`}>
-        <div className="flex flex-col flex-1 font-sans w-full max-w-7xl m-auto py-8">
+        <div className="flex flex-col flex-1 font-sans w-full max-w-7xl m-auto py-8 max-md:pt-4">
           <main className="m-auto flex flex-1 w-full flex-col">
             <div className="flex justify-between items-center w-full">
-              <Link href="/"><h2 className="logo mb-2 font-bold text-4xl">poznan.events</h2></Link>
+              <Link href="/" className="active:opacity-50"><h2 className="logo mb-2 font-bold text-4xl">poznan.events</h2></Link>
               <ThemeToggle />
             </div>
             <Filters />
