@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import EventsListSimple from '@/components/EventsListSimple';
 import { getVenues } from '@/lib/getVenues';
 
@@ -12,9 +12,11 @@ export async function generateStaticParams() {
 export default async function VenueLayout({ children, params }: Props) {
   return (
     <div className="flex flex-row w-full items-start max-md:flex-col-reverse gap-4">
-      <EventsListSimple
-        params={params}
-      />
+      <Suspense>
+        <EventsListSimple
+          params={params}
+          />
+      </Suspense>
       {children}
     </div>
   );
