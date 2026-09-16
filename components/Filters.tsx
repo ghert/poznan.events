@@ -6,7 +6,7 @@ import slugify from "slugify"
 
 
 function Filter({venue, enabled}: {venue: string, enabled: boolean}) {
-  return <Link href={`/venue/${slugify(venue, {lower: true})}`}>
+  return <Link href={enabled ? `/` : `/venue/${slugify(venue, {lower: true})}`}>
     <div className={`group px-5 py-2 relative text-nowrap shrink-0`} key={venue}>
       <span className={`absolute rounded-4xl inset-0 ${enabled ? "animate-squash bg-indigo-500" : " bg-slate-300 dark:bg-slate-700 group-hover:bg-indigo-300"}`}></span>
       <span className={`relative text-nowrap whitespace-nowrap z-1 ${enabled ? "text-background dark:text-foreground" : "text-foreground dark:group-hover:text-background"}`}>{venue}</span>
