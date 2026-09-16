@@ -1,12 +1,15 @@
 import ScrollTo from "./ScrollTo";
 import { getEvent } from "@/lib/getEvent";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, X } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function EventDetails({ params }: { params: Promise<{ id: string, slug?: string }> }) {
+  const { id, slug } = await params;
   const event = await getEvent(id);
   if (!event) notFound();
+
+  const backHref = slug ? `/venue/${slug}` : '/';
 
   const dateFmt = new Intl.DateTimeFormat('pl-PL', {
     timeZone: 'Europe/Warsaw',
@@ -17,8 +20,15 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
   return (
     <div className="card bg-base-100 shadow-sm w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-4">
       <ScrollTo trigger={id} />
-      <figure className={`max-h-72 overflow-hidden`}>
-        <img key={event.image} src={event.image} alt="event" />
+      <figure className={`max-h-72 overflow-hidden relative`}>
+        <Link
+          href={backHref}
+          aria-label="Zamknij"
+          className="z-10 absolute top-3 right-3 bg-base-100/60 rounded-full p-3 active:opacity-50 backdrop-blur-md hidden max-sm:block"
+        >
+          <X width={16} height={16} />
+        </Link>
+        <img key={event.image} src={event.image} alt="Grafika wydarzenia" />
       </figure>
       <div className="card-body max-md:px-4">
         <div>
