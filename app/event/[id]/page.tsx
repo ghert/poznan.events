@@ -11,7 +11,7 @@ type Params = { params: Promise<{ id: string }> };
 
 export async function generateStaticParams() {
   const events = await getEvents()
-  return events.map((r) => ({ id: r.id }));
+  return events.map((r) => ({ id: String(r.id) }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
   return {
     title: `${event.title}`,
-    description: `${event.title}, ${event.venue_name ?? 'Poznań'}.`,
+    description: `${event.title}, ${event.venueName ?? 'Poznań'}.`,
     alternates: { canonical: `/event/${event.id}` },
   };
 }

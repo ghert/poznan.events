@@ -36,21 +36,21 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
           <div className="flex items-center gap-4 mb-1">
             <div className="badge badge-neutral badge-xl min-w-0">
               <span className="truncate">
-                {event.venue_name}
+                {event.venueName}
               </span>
             </div>
-            {event.starts_at ? (
+            {event.startsAt ? (
               <div className="badge badge-neutral badge-xl shrink-0">
-                {dateFmt.format(new Date(event.starts_at))}
+                {dateFmt.format(new Date(event.startsAt))}
               </div>
             ) : null}
             </div>
         </div>
         <div>
-          <a className="mb-4 inline-block group" href={event.source_url} target="__blank">
+          <a className="mb-4 inline-block group" href={event.sourceUrl} target="__blank">
             <div className="badge badge-soft badge-xl text-sm min-w-0 max-w-full">
               <span className="truncate group-hover:underline">
-                {event.source_url.replace("https://www.", "")}
+                {event.sourceUrl.replace("https://www.", "")}
               </span>
               <ExternalLink size="16" />
             </div>

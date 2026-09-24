@@ -12,12 +12,12 @@ export interface ScrapedEvent {
 
 export interface ScrapedEventFromDB {
   id: number;
-  source_id: string;
-  source_url: string;
+  sourceId: string;
+  sourceUrl: string;
   title: string;
-  starts_at: string | null;
-  ends_at: string | null;
-  venue_name: string | null;
+  startsAt: string | null;
+  endsAt: string | null;
+  venueName: string | null;
   address: string | null;
   image: string;
   description: string;

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { sql } from '@/lib/db';
+import { db } from '@/lib/db';
+import { sql } from 'drizzle-orm';
 import { SCRAPE_INPUTS } from "@/lib/sources";
 import { Row, ScrapedEvent } from '@/lib/types';
 import { revalidatePath, revalidateTag } from 'next/cache';
@@ -76,9 +77,9 @@ export async function POST(request: Request) {
     for (const batch of chunk(unique, 25)) {
       const json = JSON.stringify(batch.map(toRecord));
 
-      await sql.transaction([
+      await db.batch([
         // 1 Update existing rows
-        sql`
+        db.execute(sql`
           update events e set
             source_url   = v.source_url,
             title        = v.title,
@@ -96,10 +97,10 @@ export async function POST(request: Request) {
             ends_at text, venue_name text, address text, description text, image text
           )
           where e.source_id = v.source_id
-        `,
+        `),
 
         // Insert only the ones that don't exist yet
-        sql`
+        db.execute(sql`
           insert into events
             (source_id, source_url, title, starts_at, ends_at,
              venue_name, address, description, image, last_seen_at, is_active)
@@ -115,17 +116,17 @@ export async function POST(request: Request) {
             select 1 from events e where e.source_id = v.source_id
           )
           on conflict (source_id) do nothing
-        `,
+        `),
       ]);
     }
 
-    await sql`
+    await db.execute(sql`
       update events
       set is_active = false
       where is_active and last_seen_at < now() - interval '5 days'
-    `;
+    `);
 
-    await sql`
+    await db.execute(sql`
       update scrape_runs
       set status = 'delivered',
           completed_at = now(),
@@ -136,7 +137,7 @@ export async function POST(request: Request) {
         order by triggered_at desc
         limit 1
       )
-    `;
+    `);
 
     revalidateTag('events', 'days');
     revalidatePath('/', 'layout');
@@ -148,14 +149,14 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    await sql`
+    await db.execute(sql`
       update scrape_runs
       set status = 'failed', completed_at = now(), error = ${message}
       where id = (
         select id from scrape_runs where status = 'triggered'
         order by triggered_at desc limit 1
       )
-    `;
+    `);
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }

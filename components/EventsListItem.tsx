@@ -22,8 +22,8 @@ export default function EventsListItem(
 
   return <p className="text-nowrap text-ellipsis truncate active:opacity-50">
     <Link href={`${basePath}/event/${event.id}`} scroll={false} onClick={onClick}>
-      <span className={`hover:underline cursor-pointer max-md:text-lg ${enabled ? "font-bold" : "none"}`} key={event.source_id}>
-        ({event.starts_at ? dateFormat.format(new Date(event.starts_at)) : ""}){" "}
+      <span className={`hover:underline cursor-pointer max-md:text-lg ${enabled ? "font-bold" : "none"}`} key={event.sourceId}>
+        ({event.startsAt ? dateFormat.format(new Date(event.startsAt)) : ""}){" "}
         {event.title}
       </span>
     </Link>

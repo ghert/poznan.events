@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { sql } from '@/lib/db';
+import { db } from '@/lib/db';
+import { scrapeRuns } from '@/lib/db/schema';
+import { desc, ne } from 'drizzle-orm';
 import { SCRAPE_INPUTS } from '@/lib/sources';
 
 // Vercel's Hobby plan only fires cron jobs once per day, so we run daily and
@@ -14,16 +16,15 @@ export async function GET(request: Request) {
   // }
 
   try {
-    const [last] = await sql`
-      select triggered_at
-      from scrape_runs
-      where status <> 'failed'
-      order by triggered_at desc
-      limit 1
-    `;
+    const [last] = await db
+      .select({ triggeredAt: scrapeRuns.triggeredAt })
+      .from(scrapeRuns)
+      .where(ne(scrapeRuns.status, 'failed'))
+      .orderBy(desc(scrapeRuns.triggeredAt))
+      .limit(1);
 
     if (last) {
-      const hoursSince = (Date.now() - new Date(last.triggered_at).getTime()) / 3_600_000;
+      const hoursSince = (Date.now() - new Date(last.triggeredAt).getTime()) / 3_600_000;
       if (hoursSince < MIN_HOURS_BETWEEN_RUNS) {
         // return NextResponse.json({
         //   skipped: true,
@@ -55,25 +56,25 @@ export async function GET(request: Request) {
 
     const body = await res.text();
     if (!res.ok) {
-      await sql`
-        insert into scrape_runs (status, error)
-        values ('failed', ${`Bright Data ${res.status}: ${body.slice(0, 500)}`})
-      `;
+      await db.insert(scrapeRuns).values({
+        status: 'failed',
+        error: `Bright Data ${res.status}: ${body.slice(0, 500)}`,
+      });
       return NextResponse.json({ ok: false, status: res.status, body }, { status: 502 });
     }
 
     const { snapshot_id } = JSON.parse(body) as { snapshot_id: string };
 
-    await sql`
-      insert into scrape_runs (snapshot_id, status)
-      values (${snapshot_id}, 'triggered')
-    `;
+    await db.insert(scrapeRuns).values({
+      snapshotId: snapshot_id,
+      status: 'triggered',
+    });
 
     // Results arrive later at /api/webhooks/brightdata
     return NextResponse.json({ ok: true, snapshotId: snapshot_id });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    await sql`insert into scrape_runs (status, error) values ('failed', ${message})`;
+    await db.insert(scrapeRuns).values({ status: 'failed', error: message });
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }
