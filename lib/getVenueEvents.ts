@@ -1,15 +1,16 @@
-import { db } from '@/lib/db';
-import { events } from '@/lib/db/schema';
-import { ScrapedEventFromDB } from './types';
-import { cacheLife, cacheTag } from 'next/cache';
-import { and, eq, gt, sql } from 'drizzle-orm';
-import slugify from 'slugify';
+import { db } from "@/lib/db";
+import { events } from "@/lib/db/schema";
+import { ScrapedEventFromDB } from "./types";
+import { cacheLife, cacheTag } from "next/cache";
+import { and, eq, gt, sql } from "drizzle-orm";
+import slugify from "slugify";
 
-export async function getVenueEvents(venue: string): Promise<ScrapedEventFromDB[]> {
-
-  'use cache';
-  cacheTag('events');
-  cacheLife('days');
+export async function getVenueEvents(
+  venue: string,
+): Promise<ScrapedEventFromDB[]> {
+  "use cache";
+  cacheTag("events");
+  cacheLife("days");
   const rows = await db
     .select({
       id: events.id,
@@ -22,7 +23,9 @@ export async function getVenueEvents(venue: string): Promise<ScrapedEventFromDB[
     .from(events)
     .where(and(eq(events.isActive, true), gt(events.endsAt, sql`now()`)));
 
-  const venueEvents = rows.filter(row => venue === slugify(row.venueName ?? '', {lower: true}))
+  const venueEvents = rows.filter(
+    (row) => venue === slugify(row.venueName ?? "", { lower: true }),
+  );
 
   return venueEvents as ScrapedEventFromDB[];
 }

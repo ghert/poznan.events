@@ -1,14 +1,13 @@
-import { db } from '@/lib/db';
-import { events } from '@/lib/db/schema';
-import { ScrapedEventFromDB } from './types';
-import { cacheLife, cacheTag } from 'next/cache';
-import { and, asc, eq, gt, sql } from 'drizzle-orm';
+import { db } from "@/lib/db";
+import { events } from "@/lib/db/schema";
+import { ScrapedEventFromDB } from "./types";
+import { cacheLife, cacheTag } from "next/cache";
+import { and, asc, eq, gt, sql } from "drizzle-orm";
 
 export async function getEvents(): Promise<ScrapedEventFromDB[]> {
-
-  'use cache';
-  cacheLife('days');
-  cacheTag('events');
+  "use cache";
+  cacheLife("days");
+  cacheTag("events");
   const rows = await db
     .select({
       id: events.id,

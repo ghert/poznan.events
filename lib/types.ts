@@ -8,7 +8,7 @@ export interface ScrapedEvent {
   address: string | null;
   image: string;
   description: string;
-};
+}
 
 export interface ScrapedEventFromDB {
   id: number;
@@ -21,7 +21,7 @@ export interface ScrapedEventFromDB {
   address: string | null;
   image: string;
   description: string;
-};
+}
 
 export interface Row {
   event_id: string;
@@ -31,14 +31,14 @@ export interface Row {
   title: string;
   location: {
     address: string;
-  },
-  hosts: { name: string }[],
+  };
+  hosts: { name: string }[];
   discovery_input: {
     url: string;
-  },
+  };
   description: {
     text: string;
-  },
+  };
   main_image_downloadable: string;
   unformatted_description_text: string;
 }

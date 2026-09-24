@@ -3,11 +3,11 @@ import { addWeeks, endOfWeek, startOfWeek } from "date-fns";
 import { cacheLife, cacheTag } from "next/cache";
 
 export async function getWeekBoundaries() {
-  'use cache';
-  cacheLife('days');
-  cacheTag('events');
+  "use cache";
+  cacheLife("days");
+  cacheTag("events");
   const now = new Date();
-  const opts = { weekStartsOn: 1 as const, in: tz('Europe/Warsaw') };
+  const opts = { weekStartsOn: 1 as const, in: tz("Europe/Warsaw") };
   const start = startOfWeek(now, opts);
   const end = endOfWeek(now, opts);
   return {

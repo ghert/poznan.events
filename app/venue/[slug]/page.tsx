@@ -6,8 +6,8 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const venues = await getVenues();
-  const venue = venues.find(item => item.slug === slug);
-  if (!venue) return { title: 'Nie znaleziono strony klubu' };
+  const venue = venues.find((item) => item.slug === slug);
+  if (!venue) return { title: "Nie znaleziono strony klubu" };
 
   return {
     title: `${venue.name} | poznan.events`,

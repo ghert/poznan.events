@@ -1,16 +1,17 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { sql } from 'drizzle-orm';
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { SCRAPE_INPUTS } from "@/lib/sources";
-import { Row, ScrapedEvent } from '@/lib/types';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { Row, ScrapedEvent } from "@/lib/types";
+import { revalidatePath, revalidateTag } from "next/cache";
 export const maxDuration = 60;
 
 /**
  * Maps one raw Bright Data row to our schema
  */
 function normalize(row: Row): ScrapedEvent | null {
-  const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : null);
+  const str = (v: unknown) =>
+    typeof v === "string" && v.trim() ? v.trim() : null;
 
   if (!row.url || !row.title) return null;
 
@@ -21,18 +22,22 @@ function normalize(row: Row): ScrapedEvent | null {
     return Number.isNaN(d.getTime()) ? null : d.toISOString();
   };
 
-  const findVenue = (row: Row): string => SCRAPE_INPUTS?.findLast(input => input.url === row.discovery_input.url)?.venue || '';
+  const findVenue = (row: Row): string =>
+    SCRAPE_INPUTS?.findLast((input) => input.url === row.discovery_input.url)
+      ?.venue || "";
 
   return {
     sourceId: row.event_id,
-    sourceUrl: str(row.url) || '',
-    title: str(row.title) || '',
+    sourceUrl: str(row.url) || "",
+    title: str(row.title) || "",
     startsAt: toDate(row.event_date),
-    endsAt: row.event_end_date ? toDate(row.event_end_date) : toDate(row.event_date),
+    endsAt: row.event_end_date
+      ? toDate(row.event_end_date)
+      : toDate(row.event_date),
     venueName: findVenue(row),
     address: str(row.location?.address),
     description: row.unformatted_description_text || "",
-    image: row.main_image_downloadable || ""
+    image: row.main_image_downloadable || "",
   };
 }
 
@@ -52,13 +57,17 @@ function toRecord(e: ScrapedEvent) {
 
 function chunk<T>(items: T[], size: number): T[][] {
   const out: T[][] = [];
-  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  for (let i = 0; i < items.length; i += size)
+    out.push(items.slice(i, i + size));
   return out;
 }
 
 export async function POST(request: Request) {
-  if (request.headers.get('authorization') !== `Bearer ${process.env.WEBHOOK_SECRET}`) {
-    return new NextResponse('Unauthorized', { status: 401 });
+  if (
+    request.headers.get("authorization") !==
+    `Bearer ${process.env.WEBHOOK_SECRET}`
+  ) {
+    return new NextResponse("Unauthorized", { status: 401 });
   }
 
   try {
@@ -139,8 +148,8 @@ export async function POST(request: Request) {
       )
     `);
 
-    revalidateTag('events', 'days');
-    revalidatePath('/', 'layout');
+    revalidateTag("events", "days");
+    revalidatePath("/", "layout");
 
     return NextResponse.json({
       ok: true,

@@ -4,17 +4,24 @@ import { ExternalLink, X } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function EventDetails({ params }: { params: Promise<{ id: string, slug?: string }> }) {
+export default async function EventDetails({
+  params,
+}: {
+  params: Promise<{ id: string; slug?: string }>;
+}) {
   const { id, slug } = await params;
   const event = await getEvent(id);
   if (!event) notFound();
 
-  const backHref = slug ? `/venue/${slug}` : '/';
+  const backHref = slug ? `/venue/${slug}` : "/";
 
-  const dateFmt = new Intl.DateTimeFormat('pl-PL', {
-    timeZone: 'Europe/Warsaw',
-    day: '2-digit', month: '2-digit', year: '2-digit',
-    hour: '2-digit', minute: '2-digit',
+  const dateFmt = new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "Europe/Warsaw",
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   return (
@@ -35,19 +42,21 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
           <h2 className="text-2xl mb-4">{event.title}</h2>
           <div className="flex items-center gap-4 mb-1">
             <div className="badge badge-neutral badge-xl min-w-0">
-              <span className="truncate">
-                {event.venueName}
-              </span>
+              <span className="truncate">{event.venueName}</span>
             </div>
             {event.startsAt ? (
               <div className="badge badge-neutral badge-xl shrink-0">
                 {dateFmt.format(new Date(event.startsAt))}
               </div>
             ) : null}
-            </div>
+          </div>
         </div>
         <div>
-          <a className="mb-4 inline-block group" href={event.sourceUrl} target="__blank">
+          <a
+            className="mb-4 inline-block group"
+            href={event.sourceUrl}
+            target="__blank"
+          >
             <div className="badge badge-soft badge-xl text-sm min-w-0 max-w-full">
               <span className="truncate group-hover:underline">
                 {event.sourceUrl.replace("https://www.", "")}
@@ -58,6 +67,6 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
         </div>
         <p className="whitespace-pre-line">{event.description}</p>
       </div>
-      </div>
-  )
+    </div>
+  );
 }
