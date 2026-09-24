@@ -8,7 +8,10 @@ export default function Footer() {
           className="hover:opacity-50"
           href="https://instagram.com/poznan.events"
         >
-          instagram.com/poznan.events
+          instagram
+        </Link>
+        <Link className="hover:opacity-50" href="https://filipprzydryga.xyz">
+          kontakt
         </Link>
       </nav>
     </footer>
