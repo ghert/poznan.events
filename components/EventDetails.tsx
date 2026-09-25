@@ -1,6 +1,6 @@
 import ScrollTo from "./ScrollTo";
 import { getEvent } from "@/lib/getEvent";
-import { ExternalLink, X } from "lucide-react";
+import { CalendarPlus, ExternalLink, Heart, X } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -40,31 +40,42 @@ export default async function EventDetails({
       <div className="card-body max-md:px-4">
         <div>
           <h2 className="text-2xl mb-4">{event.title}</h2>
-          <div className="flex items-center gap-4 mb-1">
-            <div className="badge badge-neutral badge-xl min-w-0">
-              <span className="truncate">{event.venueName}</span>
-            </div>
-            {event.startsAt ? (
-              <div className="badge badge-neutral badge-xl shrink-0">
-                {dateFmt.format(new Date(event.startsAt))}
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            <div className="flex items-center gap-4 mb-1">
+              <div className="badge badge-neutral badge-xl min-w-0">
+                <span className="truncate">{event.venueName}</span>
               </div>
-            ) : null}
+              {event.startsAt ? (
+                <div className="badge badge-neutral badge-xl shrink-0">
+                  {dateFmt.format(new Date(event.startsAt))}
+                </div>
+              ) : null}
+            </div>
+            <div className="join">
+              <div className="tooltip" data-tip="Otwórz na fb">
+                <a
+                  className="btn btn-sm btn-soft min-w-0 max-w-full"
+                  href={event.sourceUrl}
+                  target="__blank"
+                >
+                  <ExternalLink size="16" />
+                </a>
+              </div>
+              {event.startsAt ? (
+                <div className="tooltip" data-tip="Dodaj do kalendarza">
+                  <a
+                    className="btn btn-sm btn-soft"
+                    href={`/event/${event.id}/calendar.ics`}
+                    download
+                  >
+                    <CalendarPlus size="16" />
+                  </a>
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
-        <div>
-          <a
-            className="mb-4 inline-block group"
-            href={event.sourceUrl}
-            target="__blank"
-          >
-            <div className="badge badge-soft badge-xl text-sm min-w-0 max-w-full">
-              <span className="truncate group-hover:underline">
-                {event.sourceUrl.replace("https://www.", "")}
-              </span>
-              <ExternalLink size="16" />
-            </div>
-          </a>
-        </div>
+        <div className="flex flex-wrap items-center gap-4 mb-4"></div>
         <p className="whitespace-pre-line">{event.description}</p>
       </div>
     </div>
