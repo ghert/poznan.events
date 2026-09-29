@@ -29,7 +29,7 @@ export default async function EventDetails({
     <div className="card bg-base-100 shadow-sm w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-4">
       <EventJsonLd event={event} />
       <ScrollTo trigger={id} />
-      <figure className={`max-h-72 overflow-hidden relative`}>
+      <figure className={`max-h-72 overflow-hidden relative rounded-t-lg`}>
         <Link
           href={backHref}
           aria-label="Zamknij"
