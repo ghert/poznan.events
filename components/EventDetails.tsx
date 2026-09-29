@@ -37,11 +37,11 @@ export default async function EventDetails({
         </Link>
         <img key={event.image} src={event.image} alt="Grafika wydarzenia" />
       </figure>
-      <div className="card-body max-md:px-4 overflow-hidden">
+      <div className="card-body max-md:px-3 overflow-hidden">
         <div>
           <h2 className="text-2xl mb-4">{event.title}</h2>
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
-            <div className="flex items-center gap-4 mb-1">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 max-md:gap-x-2 mb-4">
+            <div className="flex items-center gap-4 mb-1 max-md:gap-x-2">
               <div className="badge badge-neutral badge-xl min-w-0">
                 <span className="truncate">{event.venueName}</span>
               </div>
@@ -52,7 +52,7 @@ export default async function EventDetails({
               ) : null}
             </div>
             <div className="join">
-              <div className="tooltip" data-tip="Otwórz na fb">
+              <div className="md:tooltip" data-tip="Otwórz na fb">
                 <a
                   className="btn btn-sm btn-soft min-w-0 max-w-full"
                   href={event.sourceUrl}
@@ -62,7 +62,7 @@ export default async function EventDetails({
                 </a>
               </div>
               {event.startsAt ? (
-                <div className="tooltip" data-tip="Dodaj do kalendarza">
+                <div className="md:tooltip" data-tip="Dodaj do kalendarza">
                   <a
                     className="btn btn-sm btn-soft"
                     href={`/event/${event.id}/calendar.ics`}
@@ -75,7 +75,6 @@ export default async function EventDetails({
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-4 mb-4"></div>
         <p className="whitespace-pre-line wrap-break-word">
           {event.description}
         </p>
