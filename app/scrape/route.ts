@@ -11,9 +11,11 @@ const MIN_HOURS_BETWEEN_RUNS = 40;
 
 export async function GET(request: Request) {
   // Vercel sends this header automatically when CRON_SECRET is set in env vars.
-  // if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
-  //   return new NextResponse('Unauthorized', { status: 401 });
-  // }
+  if (
+    request.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
 
   try {
     const [last] = await db
@@ -82,7 +84,7 @@ export async function GET(request: Request) {
       status: "triggered",
     });
 
-    // Results arrive later at /api/webhooks/brightdata
+    // Results arrive later at /webhook
     return NextResponse.json({ ok: true, snapshotId: snapshot_id });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
