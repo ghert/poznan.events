@@ -10,9 +10,9 @@ import ThemeToggle from "@/components/ThemeToggle";
 const GeistSans = Geist();
 
 export const metadata: Metadata = {
-  title: "poznan.events",
+  title: "poznan.events - wydarzenia i koncerty w Poznaniu",
   description:
-    "Wydarzenia i koncerty w Poznaniu w jednym miejscu. Aktualizowane codziennie.",
+    "Imprezy, DJ sety, jam session i muzyka na żywo w jednym miejscu. Blue note, schron, tama, farby, ślina.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
