@@ -98,8 +98,7 @@ export async function POST(request: Request) {
             address      = v.address,
             description  = v.description,
             image        = v.image,
-            last_seen_at = now(),
-            is_active    = true
+            last_seen_at = now()
           from jsonb_to_recordset(${json}::jsonb)
             as v(
             source_id text, source_url text, title text, starts_at text,
