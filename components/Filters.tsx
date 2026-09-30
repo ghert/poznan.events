@@ -1,12 +1,18 @@
 "use client";
-import { SCRAPE_INPUTS } from "@/lib/sources";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import slugify from "slugify";
 
-function Filter({ venue, enabled }: { venue: string; enabled: boolean }) {
+function Filter({
+  venue,
+  slug,
+  enabled,
+}: {
+  venue: string;
+  slug: string;
+  enabled: boolean;
+}) {
   return (
-    <Link href={enabled ? `/` : `/venue/${slugify(venue, { lower: true })}`}>
+    <Link href={enabled ? `/` : `/venue/${slug}`}>
       <div
         className={`group px-5 py-2 relative text-nowrap shrink-0`}
         key={venue}
@@ -24,17 +30,22 @@ function Filter({ venue, enabled }: { venue: string; enabled: boolean }) {
   );
 }
 
-export default function Filters() {
+export default function Filters({
+  venues,
+}: {
+  venues: { name: string; slug: string }[];
+}) {
   const pathname = usePathname();
   const currentVenue = pathname.match(/^\/venue\/([^/]+)/)?.[1] ?? null;
 
   return (
     <div className="flex gap-1 py-4 pt-2 mb-2 overflow-scroll max-sm:mx-[-16px] max-md:mx-[-32px] max-sm:px-4 max-md:px-8">
-      {SCRAPE_INPUTS.map((item) => (
+      {venues.map((item) => (
         <Filter
-          key={item.venue}
-          venue={item.venue}
-          enabled={slugify(item.venue, { lower: true }) === currentVenue}
+          key={item.slug}
+          venue={item.name}
+          slug={item.slug}
+          enabled={item.slug === currentVenue}
         />
       ))}
     </div>

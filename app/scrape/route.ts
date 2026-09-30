@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { scrapeRuns } from "@/lib/db/schema";
 import { desc, ne } from "drizzle-orm";
-import { SCRAPE_INPUTS } from "@/lib/sources";
+import { getVenues } from "@/lib/getVenues";
 
 // Vercel's Hobby plan only fires cron jobs once per day, so we run daily and
 // skip the run if we already collected recently. 40h rather than 48h so a
@@ -16,6 +16,8 @@ export async function GET(request: Request) {
   ) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
+
+  const venues = await getVenues();
 
   try {
     const [last] = await db
@@ -57,8 +59,8 @@ export async function GET(request: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(
-          SCRAPE_INPUTS.map((input) => ({
-            url: input.url,
+          venues.map((input) => ({
+            url: input.page,
             upcoming_events_only: true,
           })),
         ),

@@ -6,6 +6,7 @@ import Filters from "@/components/Filters";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/ThemeToggle";
+import { getVenues } from "@/lib/getVenues";
 
 const GeistSans = Geist();
 
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
     "Imprezy, DJ sety, jam session i muzyka na żywo w jednym miejscu. Blue note, schron, tama, farby, ślina.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const venues = await getVenues();
   return (
     <html
       lang="en"
@@ -54,7 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </Link>
               <ThemeToggle />
             </div>
-            <Filters />
+            <Filters venues={venues} />
             <div className="flex flex-row w-full items-start max-md:flex-col-reverse gap-4">
               {children}
             </div>

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { sql } from "drizzle-orm";
-import { SCRAPE_INPUTS } from "@/lib/sources";
+import { sources } from "@/lib/db/schema";
 import { Row, ScrapedEvent } from "@/lib/types";
 import { revalidatePath, revalidateTag } from "next/cache";
 export const maxDuration = 60;
@@ -9,7 +9,10 @@ export const maxDuration = 60;
 /**
  * Maps one raw Bright Data row to our schema
  */
-function normalize(row: Row): ScrapedEvent | null {
+function normalize(
+  row: Row,
+  venues: { name: string; page: string }[],
+): ScrapedEvent | null {
   const str = (v: unknown) =>
     typeof v === "string" && v.trim() ? v.trim() : null;
 
@@ -23,8 +26,8 @@ function normalize(row: Row): ScrapedEvent | null {
   };
 
   const findVenue = (row: Row): string =>
-    SCRAPE_INPUTS?.findLast((input) => input.url === row.discovery_input.url)
-      ?.venue || "";
+    venues.findLast((venue) => venue.page === row.discovery_input.url)
+      ?.name || "";
 
   return {
     sourceId: row.event_id,
@@ -74,8 +77,14 @@ export async function POST(request: Request) {
     const payload = await request.json();
     const rows: Row[] = Array.isArray(payload) ? payload : [payload];
 
+    // Read straight from the DB rather than the cached getVenues(), so a
+    // just-added source is picked up on the next delivery.
+    const venues = await db
+      .select({ name: sources.name, page: sources.page })
+      .from(sources);
+
     const events = rows
-      .map(normalize)
+      .map((row) => normalize(row, venues))
       .filter((e): e is ScrapedEvent => e !== null);
 
     // Discovery can return the same event from two different venue inputs.
@@ -107,19 +116,23 @@ export async function POST(request: Request) {
           where e.source_id = v.source_id
         `),
 
-        // Insert only the ones that don't exist yet
+        // Insert only the ones that don't exist yet. New events go live
+        // only if their venue has sources.auto_add; otherwise (or if the
+        // venue has no sources row) they wait for manual approval.
         db.execute(sql`
           insert into events
             (source_id, source_url, title, starts_at, ends_at,
              venue_name, address, description, image, last_seen_at, is_active)
           select v.source_id, v.source_url, v.title,
                  v.starts_at::timestamptz, v.ends_at::timestamptz,
-                 v.venue_name, v.address, v.description, v.image, now(), true
+                 v.venue_name, v.address, v.description, v.image, now(),
+                 coalesce(s.auto_add, false)
           from jsonb_to_recordset(${json}::jsonb)
             as v(
             source_id text, source_url text, title text, starts_at text,
             ends_at text, venue_name text, address text, description text, image text
           )
+          left join sources s on s.name = v.venue_name
           where not exists (
             select 1 from events e where e.source_id = v.source_id
           )

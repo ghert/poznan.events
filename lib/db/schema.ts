@@ -71,3 +71,11 @@ export const events = pgTable(
     unique("events_source_id_key").on(table.sourceId),
   ],
 );
+
+export const sources = pgTable("sources", {
+  id: bigserial("id", { mode: "number" }).primaryKey().notNull(),
+  name: text("name").notNull().default(""),
+  page: text("page").notNull(),
+  slug: text("slug").notNull().unique(),
+  autoAdd: boolean("auto_add").default(false).notNull(),
+});

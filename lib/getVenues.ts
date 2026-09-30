@@ -1,13 +1,23 @@
 import { cacheLife, cacheTag } from "next/cache";
-import slugify from "slugify";
-import { SCRAPE_INPUTS } from "./sources";
+import { db } from "./db";
+import { sources } from "@/lib/db/schema";
+import { asc } from "drizzle-orm";
 
-export async function getVenues(): Promise<{ slug: string; name: string }[]> {
+export async function getVenues(): Promise<
+  { slug: string; name: string; page: string }[]
+> {
   "use cache";
   cacheLife("days");
-  cacheTag("events");
-  return SCRAPE_INPUTS.map((item) => ({
-    name: item.venue,
-    slug: slugify(item.venue, { lower: true }),
-  }));
+  cacheTag("sources");
+
+  const rows = await db
+    .select({
+      name: sources.name,
+      slug: sources.slug,
+      page: sources.page,
+    })
+    .from(sources)
+    .orderBy(asc(sources.id));
+
+  return rows;
 }
