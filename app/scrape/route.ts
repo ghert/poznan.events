@@ -4,13 +4,9 @@ import { scrapeRuns } from "@/lib/db/schema";
 import { desc, ne } from "drizzle-orm";
 import { getVenues } from "@/lib/getVenues";
 
-// Vercel's Hobby plan only fires cron jobs once per day, so we run daily and
-// skip the run if we already collected recently. 40h rather than 48h so a
-// slightly early trigger doesn't cause us to skip a whole day.
 const MIN_HOURS_BETWEEN_RUNS = 40;
 
 export async function GET(request: Request) {
-  // Vercel sends this header automatically when CRON_SECRET is set in env vars.
   if (
     request.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`
   ) {
@@ -39,7 +35,7 @@ export async function GET(request: Request) {
     }
 
     const params = new URLSearchParams({
-      dataset_id: process.env.BRIGHTDATA_DATASET_ID!,
+      dataset_id: process.env.DATASET_ID!,
       format: "json",
       uncompressed_webhook: "true",
       notify: "true",
@@ -50,22 +46,19 @@ export async function GET(request: Request) {
       discover_by: "venue",
     });
 
-    const res = await fetch(
-      `https://api.brightdata.com/datasets/v3/trigger?${params}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.BRIGHTDATA_API_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(
-          venues.map((input) => ({
-            url: input.page,
-            upcoming_events_only: true,
-          })),
-        ),
+    const res = await fetch(`${process.env.BACKEND_URL}?${params}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.API_TOKEN}`,
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(
+        venues.map((input) => ({
+          url: input.page,
+          upcoming_events_only: true,
+        })),
+      ),
+    });
 
     const body = await res.text();
     if (!res.ok) {
