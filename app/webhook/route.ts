@@ -25,9 +25,19 @@ function normalize(
     return Number.isNaN(d.getTime()) ? null : d.toISOString();
   };
 
-  const findVenue = (row: Row): string =>
-    venues.findLast((venue) => venue.page === row.discovery_input.url)
-      ?.name || "";
+  // Discovery rows carry the venue page they came from; collect-by-URL rows
+  // (user submissions) don't, so fall back to matching the event's hosts.
+  const findVenue = (row: Row): string => {
+    const byPage = venues.findLast(
+      (venue) => venue.page === row.discovery_input?.url,
+    );
+    if (byPage) return byPage.name;
+    const hosts = (row.hosts ?? []).map((h) => h.name?.toLowerCase());
+    return (
+      venues.find((venue) => hosts.includes(venue.name.toLowerCase()))?.name ||
+      ""
+    );
+  };
 
   return {
     sourceId: row.event_id,
@@ -72,6 +82,12 @@ export async function POST(request: Request) {
   ) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
+
+  // Deliveries triggered from /dodaj-event (see app/dodaj-event/actions.ts).
+  // Their rows wait for manual approval, so they must not touch scrape_runs,
+  // the soft-delete, or the cache.
+  const isSubmission =
+    new URL(request.url).searchParams.get("origin") === "submission";
 
   try {
     const payload = await request.json();
@@ -118,15 +134,18 @@ export async function POST(request: Request) {
 
         // Insert only the ones that don't exist yet. New events go live
         // only if their venue has sources.auto_add; otherwise (or if the
-        // venue has no sources row) they wait for manual approval.
+        // venue has no sources row, or it's a user submission) they wait
+        // for manual approval.
         db.execute(sql`
           insert into events
             (source_id, source_url, title, starts_at, ends_at,
-             venue_name, address, description, image, last_seen_at, is_active)
+             venue_name, address, description, image, last_seen_at, is_active,
+             submitted)
           select v.source_id, v.source_url, v.title,
                  v.starts_at::timestamptz, v.ends_at::timestamptz,
                  v.venue_name, v.address, v.description, v.image, now(),
-                 coalesce(s.auto_add, false)
+                 ${isSubmission ? sql`false` : sql`coalesce(s.auto_add, false)`},
+                 ${isSubmission}
           from jsonb_to_recordset(${json}::jsonb)
             as v(
             source_id text, source_url text, title text, starts_at text,
@@ -141,27 +160,29 @@ export async function POST(request: Request) {
       ]);
     }
 
-    await db.execute(sql`
-      update events
-      set is_active = false
-      where is_active and last_seen_at < now() - interval '5 days'
-    `);
+    if (!isSubmission) {
+      await db.execute(sql`
+        update events
+        set is_active = false
+        where is_active and not submitted and last_seen_at < now() - interval '5 days'
+      `);
 
-    await db.execute(sql`
-      update scrape_runs
-      set status = 'delivered',
-          completed_at = now(),
-          events_received = ${unique.length}
-      where id = (
-        select id from scrape_runs
-        where status = 'triggered'
-        order by triggered_at desc
-        limit 1
-      )
-    `);
+      await db.execute(sql`
+        update scrape_runs
+        set status = 'delivered',
+            completed_at = now(),
+            events_received = ${unique.length}
+        where id = (
+          select id from scrape_runs
+          where status = 'triggered'
+          order by triggered_at desc
+          limit 1
+        )
+      `);
 
-    revalidateTag("events", "days");
-    revalidatePath("/", "layout");
+      revalidateTag("events", "days");
+      revalidatePath("/", "layout");
+    }
 
     return NextResponse.json({
       ok: true,
@@ -170,14 +191,16 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    await db.execute(sql`
-      update scrape_runs
-      set status = 'failed', completed_at = now(), error = ${message}
-      where id = (
-        select id from scrape_runs where status = 'triggered'
-        order by triggered_at desc limit 1
-      )
-    `);
+    if (!isSubmission) {
+      await db.execute(sql`
+        update scrape_runs
+        set status = 'failed', completed_at = now(), error = ${message}
+        where id = (
+          select id from scrape_runs where status = 'triggered'
+          order by triggered_at desc limit 1
+        )
+      `);
+    }
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }

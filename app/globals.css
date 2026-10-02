@@ -58,6 +58,22 @@ body {
     font-weight: 600;
 }
 
+.input:focus {
+    outline: none;
+}
+
+.textarea:focus {
+    outline: none;
+}
+
+.select:focus, .select:open {
+    outline: none;
+}
+
+.btn-neutral:hover {
+    background: var(--color-base-300);
+}
+
 /*.logo {
   --wave-color: 200, 200, 0;
   background-image: linear-gradient(90deg,
@@ -101,4 +117,14 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Safari computes the placeholder colour of an empty date/time field from the
+   input's text colour (RenderTheme::datePlaceholderTextColor): it keeps the HSL
+   hue and saturation and only changes lightness. daisyUI's dark base-content is
+   a faintly blue near-white with 100% HSL saturation, so the placeholder comes
+   out saturated blue, and CSS can't restyle it directly. Use a fully
+   desaturated text colour for these inputs so the placeholder is grey. */
+.input:is([type="date"], [type="time"], [type="datetime-local"]) {
+  color: oklch(from var(--color-base-content) l 0 h);
 }

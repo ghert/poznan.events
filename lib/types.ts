@@ -33,7 +33,8 @@ export interface Row {
     address: string;
   };
   hosts: { name: string }[];
-  discovery_input: {
+  // Absent for collect-by-URL deliveries (user submissions)
+  discovery_input?: {
     url: string;
   };
   description: {
