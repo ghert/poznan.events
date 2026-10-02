@@ -54,15 +54,17 @@ export default async function EventDetails({
               ) : null}
             </div>
             <div className="join">
-              <div className="md:tooltip" data-tip="Otwórz na fb">
-                <a
-                  className="btn btn-sm btn-soft min-w-0 max-w-full"
-                  href={event.sourceUrl}
-                  target="__blank"
-                >
-                  <ExternalLink size="16" />
-                </a>
-              </div>
+              {event.sourceUrl ? (
+                <div className="md:tooltip" data-tip="Otwórz na fb">
+                  <a
+                    className="btn btn-sm btn-soft min-w-0 max-w-full"
+                    href={event.sourceUrl}
+                    target="__blank"
+                  >
+                    <ExternalLink size="16" />
+                  </a>
+                </div>
+              ) : null}
               {event.startsAt ? (
                 <div className="md:tooltip" data-tip="Dodaj do kalendarza">
                   <a

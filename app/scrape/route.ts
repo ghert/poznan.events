@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { scrapeRuns } from "@/lib/db/schema";
 import { desc, ne } from "drizzle-orm";
 import { getVenues } from "@/lib/getVenues";
+import { triggerBrightData } from "@/lib/brightdata";
 
 const MIN_HOURS_BETWEEN_RUNS = 40;
 
@@ -34,45 +35,30 @@ export async function GET(request: Request) {
       }
     }
 
-    const params = new URLSearchParams({
-      dataset_id: process.env.DATASET_ID!,
-      format: "json",
-      uncompressed_webhook: "true",
-      notify: "true",
-      limit_per_input: "10",
-      endpoint: `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/webhook`,
-      auth_header: `Bearer ${process.env.WEBHOOK_SECRET}`,
-      type: "discover_new",
-      discover_by: "venue",
-    });
-
-    const res = await fetch(`${process.env.BACKEND_URL}?${params}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.API_TOKEN}`,
-        "Content-Type": "application/json",
+    const result = await triggerBrightData(
+      venues.map((input) => ({
+        url: input.page,
+        upcoming_events_only: true,
+      })),
+      {
+        limit_per_input: "10",
+        type: "discover_new",
+        discover_by: "venue",
       },
-      body: JSON.stringify(
-        venues.map((input) => ({
-          url: input.page,
-          upcoming_events_only: true,
-        })),
-      ),
-    });
+    );
 
-    const body = await res.text();
-    if (!res.ok) {
+    if (!result.ok) {
       await db.insert(scrapeRuns).values({
         status: "failed",
-        error: `Bright Data ${res.status}: ${body.slice(0, 500)}`,
+        error: `Bright Data ${result.status}: ${result.body.slice(0, 500)}`,
       });
       return NextResponse.json(
-        { ok: false, status: res.status, body },
+        { ok: false, status: result.status, body: result.body },
         { status: 502 },
       );
     }
 
-    const { snapshot_id } = JSON.parse(body) as { snapshot_id: string };
+    const snapshot_id = result.snapshotId;
 
     await db.insert(scrapeRuns).values({
       snapshotId: snapshot_id,
