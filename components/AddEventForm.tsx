@@ -147,9 +147,9 @@ function ImageDropzone() {
           <>
             <ImagePlus size={40} className="opacity-50 pointer-events-none" />
             <span className="text-sm opacity-70 text-center px-4 pointer-events-none">
-              Przeciągnij grafikę lub kliknij, aby wybrać
+              Dodaj grafikę 16:9
               <br />
-              JPG, PNG lub WebP, maks. 3,5 MB
+              (jpg lub png / maks. 3.5 MB)
             </span>
           </>
         )}
@@ -226,12 +226,12 @@ function ManualForm() {
 }
 
 const TABS = [
-  { id: "facebook", label: "Importuj z fb" },
   { id: "manual", label: "Dodaj ręcznie" },
+  { id: "facebook", label: "Importuj z FB" },
 ];
 
 export default function AddEventForm() {
-  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("facebook");
+  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("manual");
   return (
     <div className="w-full max-w-2xl">
       <h1 className="text-2xl mb-4">Dodaj wydarzenie</h1>
@@ -241,7 +241,7 @@ export default function AddEventForm() {
             key={id}
             role="tab"
             type="button"
-            className={`tab border-b-0 ${tab === id ? "tab-active shadow-sm [clip-path:inset(-12px_-12px_0_-12px)]" : ""}`}
+            className={`tab text-lg border-b-0 ${tab === id ? "tab-active shadow-sm [clip-path:inset(-12px_-12px_0_-12px)]" : ""}`}
             aria-selected={tab === id}
             onClick={() => setTab(id)}
           >
@@ -250,7 +250,7 @@ export default function AddEventForm() {
         ))}
       </div>
       <div
-        className={`bg-base-100 shadow-sm border-base-300 border rounded-box -mt-px p-6 max-sm:p-4 ${tab === "facebook" ? "rounded-tl-none" : ""}`}
+        className={`bg-base-100 shadow-sm border-base-300 border rounded-box -mt-px p-6 max-sm:p-4 ${tab === "manual" ? "rounded-tl-none" : ""}`}
       >
         <div hidden={tab !== "facebook"}>
           <FacebookForm />

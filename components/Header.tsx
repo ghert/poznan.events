@@ -1,0 +1,24 @@
+import Link from "next/link";
+
+export default function Header() {
+  return (
+    <footer className="m-auto footer max-w-7xl sm:footer-horizontal text-base-content rounded text-lg pt-8 pb-4 max-md:pt-0">
+      <nav className="flex justify-center w-full">
+        <Link className="hover:opacity-50" href="/dodaj-wydarzenie">
+          dodaj wydarzenie
+        </Link>
+        {" · "}
+        <Link
+          className="hover:opacity-50"
+          href="https://instagram.com/poznan.events"
+        >
+          instagram
+        </Link>
+        {" · "}
+        <Link className="hover:opacity-50" href="https://filipprzydryga.xyz">
+          kontakt
+        </Link>
+      </nav>
+    </footer>
+  );
+}
