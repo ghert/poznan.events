@@ -4,7 +4,7 @@ import slugify from "slugify";
 
 export async function GET(
   _request: Request,
-  { params }: RouteContext<"/event/[id]/calendar.ics">,
+  { params }: RouteContext<"/wydarzenie/[id]/calendar.ics">,
 ) {
   const { id } = await params;
   const event = await getEvent(id);

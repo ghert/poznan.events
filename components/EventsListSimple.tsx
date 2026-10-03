@@ -27,7 +27,7 @@ export default async function EventsListSimple({
           key={event.sourceId}
           event={event}
           enabled={false}
-          basePath={`/venue/${slug}`}
+          basePath={`/miejsce/${slug}`}
         />
       ))}
     </div>

@@ -3,7 +3,7 @@
 import {
   ChangeEvent,
   DragEvent,
-  FormEvent,
+  SubmitEvent,
   startTransition,
   useActionState,
   useEffect,
@@ -15,19 +15,16 @@ import {
   submitFacebookUrl,
   submitManualEvent,
   type SubmitState,
-} from "@/app/dodaj-event/actions";
+} from "@/app/dodaj-wydarzenie/actions";
 
 const MAX_IMAGE_BYTES = 3.5 * 1024 * 1024;
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-// Submitting via onSubmit + startTransition (instead of <form action>) keeps
-// the inputs filled when the server returns a validation error — React resets
-// <form action> forms after every submission.
 function useSubmit(
   action: (state: SubmitState, formData: FormData) => Promise<SubmitState>,
 ) {
   const [state, dispatch, pending] = useActionState(action, null);
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     startTransition(() => dispatch(new FormData(form)));
@@ -125,8 +122,7 @@ function ImageDropzone() {
             ? "border-gray-400"
             : error
               ? "border-error"
-              : // Same as daisyUI's --input-color for .input
-                "border-base-content/20 hover:border-gray-500"
+              : "border-base-content/20 hover:border-gray-500"
         }`}
       >
         <input
@@ -230,9 +226,9 @@ function ManualForm() {
 }
 
 const TABS = [
-  { id: "facebook", label: "Link z Facebooka" },
-  { id: "manual", label: "Formularz" },
-] as const;
+  { id: "facebook", label: "Importuj z fb" },
+  { id: "manual", label: "Dodaj ręcznie" },
+];
 
 export default function AddEventForm() {
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("facebook");

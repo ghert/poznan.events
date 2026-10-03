@@ -12,14 +12,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 1,
     },
+    {
+      url: `${BASE_URL}/dodaj-wydarzenie`,
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
     ...venues.map((venue) => ({
-      url: `${BASE_URL}/venue/${venue.slug}`,
+      url: `${BASE_URL}/miejsce/${venue.slug}`,
       changeFrequency: "daily" as const,
       priority: 0.8,
     })),
     // Only /event/[id] is listed — /venue/[slug]/event/[id] canonicalizes to it.
     ...events.map((event) => ({
-      url: `${BASE_URL}/event/${event.id}`,
+      url: `${BASE_URL}/wydarzenie/${event.id}`,
       changeFrequency: "weekly" as const,
       priority: 0.6,
     })),

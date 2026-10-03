@@ -30,7 +30,7 @@ export default function EventsListItem({
   return (
     <p className="text-nowrap text-ellipsis truncate active:opacity-50">
       <Link
-        href={`${basePath}/event/${event.id}`}
+        href={`${basePath}/wydarzenie/${event.id}`}
         scroll={false}
         onClick={onClick}
       >

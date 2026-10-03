@@ -12,7 +12,7 @@ function Filter({
   enabled: boolean;
 }) {
   return (
-    <Link href={enabled ? `/` : `/venue/${slug}`}>
+    <Link href={enabled ? `/` : `/miejsce/${slug}`}>
       <div
         className={`group px-5 py-2 relative text-nowrap shrink-0`}
         key={venue}

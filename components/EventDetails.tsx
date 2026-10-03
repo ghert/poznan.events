@@ -1,7 +1,7 @@
 import EventJsonLd from "./EventJsonLd";
 import ScrollTo from "./ScrollTo";
 import { getEvent } from "@/lib/getEvent";
-import { CalendarPlus, ExternalLink, Heart, X } from "lucide-react";
+import { CalendarPlus, ExternalLink, X } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
