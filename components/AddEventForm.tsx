@@ -37,7 +37,7 @@ function Status({ state }: { state: SubmitState }) {
   return (
     <div
       role="alert"
-      className={`alert ${state.ok ? "alert-success" : "alert-error"} alert-soft`}
+      className={`alert ${state.ok ? "alert-success" : "alert-error"} alert`}
     >
       {state.message}
     </div>
@@ -50,7 +50,7 @@ function FacebookForm() {
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <label className="flex flex-col gap-1">
-        <span>Link do wydarzenia na Facebooku</span>
+        <span>Link do wydarzenia na facebooku</span>
         <input
           name="url"
           type="url"
@@ -241,7 +241,7 @@ export default function AddEventForm() {
             key={id}
             role="tab"
             type="button"
-            className={`tab ${tab === id ? "tab-active" : ""}`}
+            className={`tab border-b-0 ${tab === id ? "tab-active shadow-sm [clip-path:inset(-12px_-12px_0_-12px)]" : ""}`}
             aria-selected={tab === id}
             onClick={() => setTab(id)}
           >
@@ -249,7 +249,9 @@ export default function AddEventForm() {
           </button>
         ))}
       </div>
-      <div className="bg-base-100 border-base-300 border rounded-box rounded-tl-none -mt-px p-6 max-sm:p-4">
+      <div
+        className={`bg-base-100 shadow-sm border-base-300 border rounded-box -mt-px p-6 max-sm:p-4 ${tab === "facebook" ? "rounded-tl-none" : ""}`}
+      >
         <div hidden={tab !== "facebook"}>
           <FacebookForm />
         </div>
