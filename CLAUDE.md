@@ -45,9 +45,9 @@ Two-step, cron-driven flow across two route handlers:
 
 `lib/types.ts` has three related-but-distinct shapes: `Row` (raw Bright Data payload — snake_case, an external contract, don't rename), `ScrapedEvent` (normalized, camelCase, pre-insert), `ScrapedEventFromDB` (camelCase, what Drizzle queries return).
 
-### User submissions (`/dodaj-event`)
+### User submissions (`/dodaj-wydarzenie`)
 
-`app/dodaj-event/actions.ts` has two Server Actions, both gated by Vercel BotID (`checkBotId()`; client side registered in `instrumentation-client.ts`, config wrapped in `withBotId`). A Facebook URL triggers a Bright Data collect-by-URL job (`lib/brightdata.ts`) that delivers to `/webhook?origin=submission`. The manual form uploads the image to Cloudflare R2 (`lib/r2.ts`) and inserts directly. Every submission lands with `is_active = false, submitted = true` and waits for manual approval. Submission paths deliberately **don't revalidate** the cache. Submission webhook deliveries also skip the `scrape_runs` update and the 5-day soft-delete. `submitted` rows are exempt from that soft-delete, because the scrape never re-sees them.
+`app/dodaj-wydarzenie/actions.ts` has two Server Actions, both gated by Vercel BotID (`checkBotId()`; client side registered in `instrumentation-client.ts`, config wrapped in `withBotId`). A Facebook URL triggers a Bright Data collect-by-URL job (`lib/brightdata.ts`) that delivers to `/webhook?origin=submission`. The manual form uploads the image to Cloudflare R2 (`lib/r2.ts`) and inserts directly. Every submission lands with `is_active = false, submitted = true` and waits for manual approval. Submission paths deliberately **don't revalidate** the cache. Submission webhook deliveries also skip the `scrape_runs` update and the 5-day soft-delete. `submitted` rows are exempt from that soft-delete, because the scrape never re-sees them.
 
 ### Routing
 
@@ -57,4 +57,15 @@ Two-step, cron-driven flow across two route handlers:
 
 ### Env vars
 
-`DATABASE_URL` (Neon pooled connection string), `CRON_SECRET`, `BRIGHTDATA_API_TOKEN`, `BRIGHTDATA_DATASET_ID`, `WEBHOOK_SECRET`, `APP_BASE_URL`, and for `/dodaj-event` image uploads: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `R2_PUBLIC_URL`.
+Set in `.env` / Vercel:
+
+- `DATABASE_URL`: Neon pooled connection string (`lib/db/index.ts`, `drizzle.config.ts`)
+- `CRON_SECRET`: bearer token Vercel cron sends to `/scrape`
+- `WEBHOOK_SECRET`: bearer token Bright Data sends back to `/webhook`
+- `API_TOKEN`, `DATASET_ID`, `BACKEND_URL`: Bright Data API token, dataset id and trigger endpoint (`lib/brightdata.ts`)
+- `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `R2_PUBLIC_URL`: Cloudflare R2 for `/dodaj-wydarzenie` image uploads (`lib/r2.ts`)
+
+Provided by Vercel automatically (system env vars, not in `.env`):
+
+- `VERCEL_PROJECT_PRODUCTION_URL`: production host for `BASE_URL` (`lib/baseUrl.ts`); falls back to `http://localhost:3000`
+- `NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL`: host used to build the `/webhook` callback URL passed to Bright Data

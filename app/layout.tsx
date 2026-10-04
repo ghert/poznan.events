@@ -7,6 +7,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getVenues } from "@/lib/getVenues";
+import Header from "@/components/Header";
 
 const GeistSans = Geist();
 
@@ -50,12 +51,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       >
         <div className="flex flex-col flex-1 font-sans w-full max-w-7xl m-auto py-8 max-md:pt-4">
           <main className="m-auto flex flex-1 w-full flex-col">
-            <div className="flex justify-between items-center w-full">
-              <Link href="/" className="active:opacity-50">
-                <h2 className="logo mb-2 font-bold text-4xl">poznan.events</h2>
-              </Link>
-              <ThemeToggle />
-            </div>
+            <Header />
             <Filters venues={venues} />
             <div className="flex flex-row w-full items-start max-md:flex-col-reverse gap-4">
               {children}

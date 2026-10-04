@@ -17,6 +17,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.3,
     },
+    {
+      url: `${BASE_URL}/polityka-prywatnosci`,
+      changeFrequency: "yearly",
+      priority: 0.1,
+    },
     ...venues.map((venue) => ({
       url: `${BASE_URL}/miejsce/${venue.slug}`,
       changeFrequency: "daily" as const,

@@ -44,6 +44,23 @@ function Status({ state }: { state: SubmitState }) {
   );
 }
 
+// Required on both tabs; the server actions check it too (hasConsent).
+function ConsentCheckbox() {
+  return (
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input
+        name="consent"
+        type="checkbox"
+        required
+        className="checkbox checkbox-sm"
+      />
+      <span>
+        Zgadzam się na publikację wydarzenia na stronie poznan.events.
+      </span>
+    </label>
+  );
+}
+
 function FacebookForm() {
   const { state, pending, onSubmit } = useSubmit(submitFacebookUrl);
   if (state?.ok) return <Status state={state} />;
@@ -62,6 +79,7 @@ function FacebookForm() {
       <p className="text-sm opacity-70">
         Zgłoszone wydarzenia pojawią się na stronie po weryfikacji.
       </p>
+      <ConsentCheckbox />
       <Status state={state} />
       <button className="btn btn-neutral self-start" disabled={pending}>
         {pending ? "Wysyłanie…" : "Wyślij"}
@@ -122,7 +140,7 @@ function ImageDropzone() {
             ? "border-gray-400"
             : error
               ? "border-error"
-              : "border-base-content/20 hover:border-gray-500"
+              : "border-base-content/20"
         }`}
       >
         <input
@@ -217,6 +235,7 @@ function ManualForm() {
       <p className="text-sm opacity-70">
         Zgłoszone wydarzenia pojawią się na stronie po weryfikacji.
       </p>
+      <ConsentCheckbox />
       <Status state={state} />
       <button className="btn btn-neutral self-start" disabled={pending}>
         {pending ? "Wysyłanie…" : "Wyślij"}

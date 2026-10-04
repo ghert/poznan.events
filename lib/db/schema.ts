@@ -63,7 +63,7 @@ export const events = pgTable(
     isActive: boolean("is_active").default(true).notNull(),
     description: text("description"),
     image: text("image"),
-    // User-submitted via /dodaj-event (manual form or FB URL). Exempt from
+    // User-submitted via /dodaj-wydarzenie (manual form or FB URL). Exempt from
     // the webhook's "not seen in 5 days" soft-delete.
     submitted: boolean("submitted").default(false).notNull(),
   },

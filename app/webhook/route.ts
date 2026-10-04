@@ -83,7 +83,7 @@ export async function POST(request: Request) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  // Deliveries triggered from /dodaj-event (see app/dodaj-event/actions.ts).
+  // Deliveries triggered from /dodaj-wydarzenie (see app/dodaj-wydarzenie/actions.ts).
   // Their rows wait for manual approval, so they must not touch scrape_runs,
   // the soft-delete, or the cache.
   const isSubmission =

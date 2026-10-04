@@ -20,7 +20,6 @@ export default async function EventDetails({
     timeZone: "Europe/Warsaw",
     day: "2-digit",
     month: "2-digit",
-    year: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -33,7 +32,7 @@ export default async function EventDetails({
         <Link
           href={backHref}
           aria-label="Zamknij"
-          className="z-10 absolute top-3 right-3 bg-base-100/60 rounded-full p-3 active:opacity-50 backdrop-blur-md hidden max-sm:block"
+          className="z-10 absolute top-3 right-3 bg-base-100/60 rounded-full p-3 active:opacity-50 backdrop-blur-xs hidden max-sm:block"
         >
           <X width={16} height={16} />
         </Link>

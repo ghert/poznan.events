@@ -36,7 +36,7 @@ export default function Filters({
   venues: { name: string; slug: string }[];
 }) {
   const pathname = usePathname();
-  const currentVenue = pathname.match(/^\/venue\/([^/]+)/)?.[1] ?? null;
+  const currentVenue = pathname.match(/^\/miejsce\/([^/]+)/)?.[1] ?? null;
 
   return (
     <div className="flex gap-1 py-4 pt-2 mb-2 overflow-scroll max-sm:mx-[-16px] max-md:mx-[-32px] max-sm:px-4 max-md:px-8">

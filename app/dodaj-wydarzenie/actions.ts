@@ -15,6 +15,12 @@ export type SubmitState = { ok: boolean; message: string } | null;
 const FB_EVENT_URL = /^https:\/\/(www\.|m\.)?facebook\.com\/events\/\d+/;
 const THANKS = "Dzięki! Wydarzenie pojawi się na stronie po weryfikacji.";
 const BOT = "Nie udało się zweryfikować przeglądarki. Spróbuj ponownie.";
+const CONSENT = "Zaznacz zgodę na publikację wydarzenia.";
+
+// Checked checkboxes submit "on"; unchecked ones are absent from FormData.
+function hasConsent(formData: FormData) {
+  return formData.get("consent") === "on";
+}
 
 export async function submitFacebookUrl(
   _prev: SubmitState,
@@ -22,6 +28,7 @@ export async function submitFacebookUrl(
 ): Promise<SubmitState> {
   const { isBot } = await checkBotId();
   if (isBot) return { ok: false, message: BOT };
+  if (!hasConsent(formData)) return { ok: false, message: CONSENT };
 
   const url = String(formData.get("url") ?? "").trim();
   if (!FB_EVENT_URL.test(url))
@@ -66,6 +73,7 @@ export async function submitManualEvent(
 ): Promise<SubmitState> {
   const { isBot } = await checkBotId();
   if (isBot) return { ok: false, message: BOT };
+  if (!hasConsent(formData)) return { ok: false, message: CONSENT };
 
   const text = (key: string) => String(formData.get(key) ?? "").trim();
 

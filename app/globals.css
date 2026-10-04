@@ -128,3 +128,13 @@ html {
   --color-success: var(--color-green-400);
   --color-success-content:var(--color-green-800);;
 }
+
+/* Modal <dialog>s (e.g. the mobile drawer) don't stop the page behind them
+   from scrolling on their own. */
+html:has(dialog[open]:modal) {
+  overflow: hidden;
+}
+
+.checkbox:checked {
+    box-shadow: none;
+}
