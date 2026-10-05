@@ -260,7 +260,7 @@ export default function AddEventForm() {
             key={id}
             role="tab"
             type="button"
-            className={`tab text-lg border-b-0 ${tab === id ? "tab-active shadow-sm [clip-path:inset(-12px_-12px_0_-12px)]" : ""}`}
+            className={`tab text-lg  border-surface-300 border-b-0 ${tab === id ? "tab-active [clip-path:inset(-12px_-12px_0_-12px)]" : ""}`}
             aria-selected={tab === id}
             onClick={() => setTab(id)}
           >
@@ -269,7 +269,7 @@ export default function AddEventForm() {
         ))}
       </div>
       <div
-        className={`bg-base-100 shadow-sm border-base-300 border rounded-box -mt-px p-6 max-sm:p-4 ${tab === "manual" ? "rounded-tl-none" : ""}`}
+        className={`bg-base-100 border-surface-300 border rounded-box -mt-px p-6 max-sm:p-4 ${tab === "manual" ? "rounded-tl-none" : ""}`}
       >
         <div hidden={tab !== "facebook"}>
           <FacebookForm />

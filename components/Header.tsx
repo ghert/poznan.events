@@ -15,7 +15,7 @@ export default function Header() {
       <div className="flex items-center ">
         <Link
           href="/dodaj-wydarzenie"
-          className="ml-6 mr-2 group hidden md:block border-base-content hover:bg-base-content hover:text-base-100 border-1 rounded-3xl px-4 py-1"
+          className="ml-6 mr-2 group hidden md:block border-surface-300 hover:bg-base-content hover:text-base-100 border-1 rounded-3xl px-4 py-1"
         >
           dodaj wydarzenie{" "}
           <PlusIcon

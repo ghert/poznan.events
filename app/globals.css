@@ -74,6 +74,11 @@ body {
     background: var(--color-zinc-700);
 }
 
+.card {
+    box-shadow: none;
+    border: 1px solid var(--surface-300);
+}
+
 /*.logo {
   --wave-color: 200, 200, 0;
   background-image: linear-gradient(90deg,
