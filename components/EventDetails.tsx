@@ -14,7 +14,7 @@ export default async function EventDetails({
   const event = await getEvent(id);
   if (!event) notFound();
 
-  const backHref = slug ? `/venue/${slug}` : "/";
+  const backHref = slug ? `/miejsce/${slug}` : "/";
 
   const dateFmt = new Intl.DateTimeFormat("pl-PL", {
     timeZone: "Europe/Warsaw",
