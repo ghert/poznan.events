@@ -7,6 +7,8 @@ import {
   integer,
   unique,
   boolean,
+  bigint,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -87,5 +89,29 @@ export const events = pgTable(
       .where(sql`is_active`),
     unique("events_source_id_key").on(table.sourceId),
     index("events_venue_slug_idx").on(table.venueSlug),
+  ],
+);
+
+export const tags = pgTable("tags", {
+  id: bigserial("id", { mode: "number" }).primaryKey().notNull(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  emoji: text("emoji").notNull(),
+});
+
+// Many-to-many between events and tags. Assigned by hand in the DB.
+export const eventTags = pgTable(
+  "event_tags",
+  {
+    eventId: bigint("event_id", { mode: "number" })
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    tagId: bigint("tag_id", { mode: "number" })
+      .notNull()
+      .references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    primaryKey({ columns: [table.eventId, table.tagId] }),
+    index("event_tags_tag_id_idx").on(table.tagId),
   ],
 );

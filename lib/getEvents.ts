@@ -3,6 +3,7 @@ import { events } from "@/lib/db/schema";
 import { ScrapedEventFromDB } from "./types";
 import { cacheLife, cacheTag } from "next/cache";
 import { and, asc, eq, gt, sql } from "drizzle-orm";
+import { withTags } from "./withTags";
 
 export async function getEvents(): Promise<ScrapedEventFromDB[]> {
   "use cache";
@@ -20,5 +21,5 @@ export async function getEvents(): Promise<ScrapedEventFromDB[]> {
     .from(events)
     .where(and(eq(events.isActive, true), gt(events.endsAt, sql`now()`)))
     .orderBy(asc(events.startsAt));
-  return rows as ScrapedEventFromDB[];
+  return (await withTags(rows)) as ScrapedEventFromDB[];
 }

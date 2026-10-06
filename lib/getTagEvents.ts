@@ -1,12 +1,12 @@
 import { db } from "@/lib/db";
-import { events } from "@/lib/db/schema";
+import { events, eventTags, tags } from "@/lib/db/schema";
 import { ScrapedEventFromDB } from "./types";
 import { cacheLife, cacheTag } from "next/cache";
 import { and, asc, eq, gt, sql } from "drizzle-orm";
 import { withTags } from "./withTags";
 
-export async function getVenueEvents(
-  venue: string,
+export async function getTagEvents(
+  tagSlug: string,
 ): Promise<ScrapedEventFromDB[]> {
   "use cache";
   cacheTag("events");
@@ -21,11 +21,13 @@ export async function getVenueEvents(
       sourceId: events.sourceId,
     })
     .from(events)
+    .innerJoin(eventTags, eq(eventTags.eventId, events.id))
+    .innerJoin(tags, eq(tags.id, eventTags.tagId))
     .where(
       and(
         eq(events.isActive, true),
         gt(events.endsAt, sql`now()`),
-        eq(events.venueSlug, venue),
+        eq(tags.slug, tagSlug),
       ),
     )
     .orderBy(asc(events.startsAt));

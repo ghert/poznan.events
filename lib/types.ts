@@ -11,6 +11,12 @@ export interface ScrapedEvent {
   description: string;
 }
 
+export interface Tag {
+  slug: string;
+  name: string;
+  emoji: string;
+}
+
 export interface ScrapedEventFromDB {
   id: number;
   sourceId: string;
@@ -23,6 +29,7 @@ export interface ScrapedEventFromDB {
   address: string | null;
   image: string;
   description: string;
+  tags?: Tag[];
 }
 
 export interface Row {

@@ -7,14 +7,18 @@ import { notFound } from "next/navigation";
 
 export default async function EventDetails({
   params,
+  section,
 }: {
   params: Promise<{ id: string; slug?: string }>;
+  // Which list the details are opened from (/miejsce/[slug] or /tag/[slug]);
+  // omitted on the main list.
+  section?: "miejsce" | "tag";
 }) {
   const { id, slug } = await params;
   const event = await getEvent(id);
   if (!event) notFound();
 
-  const backHref = slug ? `/miejsce/${slug}` : "/";
+  const backHref = section && slug ? `/${section}/${slug}` : "/";
 
   const dateFmt = new Intl.DateTimeFormat("pl-PL", {
     timeZone: "Europe/Warsaw",
@@ -52,6 +56,19 @@ export default async function EventDetails({
                 </div>
               ) : null}
             </div>
+            {event.tags?.length ? (
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                {event.tags.map((tag) => (
+                  <Link
+                    key={tag.slug}
+                    href={`/tag/${tag.slug}`}
+                    className="badge badge-soft badge-xl active:opacity-50 hover:opacity-70"
+                  >
+                    {tag.name} {tag.emoji}
+                  </Link>
+                ))}
+              </div>
+            ) : null}
             <div className="join">
               {event.sourceUrl ? (
                 <div className="md:tooltip" data-tip="Otwórz na fb">

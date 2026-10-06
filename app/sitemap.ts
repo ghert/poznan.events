@@ -2,9 +2,14 @@ import type { MetadataRoute } from "next";
 import { BASE_URL } from "@/lib/baseUrl";
 import { getEvents } from "@/lib/getEvents";
 import { getVenues } from "@/lib/getVenues";
+import { getTags } from "@/lib/getTags";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [events, venues] = await Promise.all([getEvents(), getVenues()]);
+  const [events, venues, tags] = await Promise.all([
+    getEvents(),
+    getVenues(),
+    getTags(),
+  ]);
 
   return [
     {
@@ -22,6 +27,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.1,
     },
+    ...tags.map((tag) => ({
+      url: `${BASE_URL}/tag/${tag.slug}`,
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+    })),
     ...venues.map((venue) => ({
       url: `${BASE_URL}/miejsce/${venue.slug}`,
       changeFrequency: "daily" as const,

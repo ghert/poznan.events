@@ -13,11 +13,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${event.title}`,
     description: `${event.title}, ${event.venueName ?? "Poznań"}.`,
-    alternates: { canonical: `/wydarzenie/${event.id}` },
+    alternates: { canonical: `/event/${event.id}` },
   };
 }
 
-export default async function VenueEventPage({ params }: Params) {
+export default async function TagEventPage({ params }: Params) {
   return (
     <>
       <Suspense
@@ -27,7 +27,7 @@ export default async function VenueEventPage({ params }: Params) {
           </div>
         }
       >
-        <EventDetails params={params} section="miejsce" />
+        <EventDetails params={params} section="tag" />
       </Suspense>
     </>
   );
