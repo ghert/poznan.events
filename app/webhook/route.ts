@@ -11,7 +11,7 @@ export const maxDuration = 60;
  */
 function normalize(
   row: Row,
-  venues: { name: string; page: string }[],
+  venues: { name: string; page: string; slug: string }[],
 ): ScrapedEvent | null {
   const str = (v: unknown) =>
     typeof v === "string" && v.trim() ? v.trim() : null;
@@ -27,17 +27,15 @@ function normalize(
 
   // Discovery rows carry the venue page they came from; collect-by-URL rows
   // (user submissions) don't, so fall back to matching the event's hosts.
-  const findVenue = (row: Row): string => {
+  const findVenue = (row: Row) => {
     const byPage = venues.findLast(
       (venue) => venue.page === row.discovery_input?.url,
     );
-    if (byPage) return byPage.name;
+    if (byPage) return byPage;
     const hosts = (row.hosts ?? []).map((h) => h.name?.toLowerCase());
-    return (
-      venues.find((venue) => hosts.includes(venue.name.toLowerCase()))?.name ||
-      ""
-    );
+    return venues.find((venue) => hosts.includes(venue.name.toLowerCase()));
   };
+  const venue = findVenue(row);
 
   return {
     sourceId: row.event_id,
@@ -47,7 +45,8 @@ function normalize(
     endsAt: row.event_end_date
       ? toDate(row.event_end_date)
       : toDate(row.event_date),
-    venueName: findVenue(row),
+    venueName: venue?.name || "",
+    venueSlug: venue?.slug ?? null,
     address: str(row.location?.address),
     description: row.unformatted_description_text || "",
     image: row.main_image_downloadable || "",
@@ -62,6 +61,7 @@ function toRecord(e: ScrapedEvent) {
     starts_at: e.startsAt,
     ends_at: e.endsAt,
     venue_name: e.venueName,
+    venue_slug: e.venueSlug,
     address: e.address,
     description: e.description,
     image: e.image,
@@ -96,7 +96,7 @@ export async function POST(request: Request) {
     // Read straight from the DB rather than the cached getVenues(), so a
     // just-added source is picked up on the next delivery.
     const venues = await db
-      .select({ name: sources.name, page: sources.page })
+      .select({ name: sources.name, page: sources.page, slug: sources.slug })
       .from(sources);
 
     const events = rows
@@ -120,6 +120,7 @@ export async function POST(request: Request) {
             starts_at    = v.starts_at::timestamptz,
             ends_at      = v.ends_at::timestamptz,
             venue_name   = v.venue_name,
+            venue_slug   = coalesce(v.venue_slug, e.venue_slug),
             address      = v.address,
             description  = v.description,
             image        = v.image,
@@ -127,7 +128,8 @@ export async function POST(request: Request) {
           from jsonb_to_recordset(${json}::jsonb)
             as v(
             source_id text, source_url text, title text, starts_at text,
-            ends_at text, venue_name text, address text, description text, image text
+            ends_at text, venue_name text, venue_slug text, address text,
+            description text, image text
           )
           where e.source_id = v.source_id
         `),
@@ -139,19 +141,22 @@ export async function POST(request: Request) {
         db.execute(sql`
           insert into events
             (source_id, source_url, title, starts_at, ends_at,
-             venue_name, address, description, image, last_seen_at, is_active,
+             venue_name, venue_slug, address, description, image, last_seen_at,
+             is_active,
              submitted)
           select v.source_id, v.source_url, v.title,
                  v.starts_at::timestamptz, v.ends_at::timestamptz,
-                 v.venue_name, v.address, v.description, v.image, now(),
+                 v.venue_name, v.venue_slug, v.address, v.description, v.image,
+                 now(),
                  ${isSubmission ? sql`false` : sql`coalesce(s.auto_add, false)`},
                  ${isSubmission}
           from jsonb_to_recordset(${json}::jsonb)
             as v(
             source_id text, source_url text, title text, starts_at text,
-            ends_at text, venue_name text, address text, description text, image text
+            ends_at text, venue_name text, venue_slug text, address text,
+            description text, image text
           )
-          left join sources s on s.name = v.venue_name
+          left join sources s on s.slug = v.venue_slug
           where not exists (
             select 1 from events e where e.source_id = v.source_id
           )

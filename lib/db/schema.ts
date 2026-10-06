@@ -37,6 +37,14 @@ export const scrapeRuns = pgTable(
   ],
 );
 
+export const sources = pgTable("sources", {
+  id: bigserial("id", { mode: "number" }).primaryKey().notNull(),
+  name: text("name").notNull().default(""),
+  page: text("page").notNull(),
+  slug: text("slug").notNull().unique(),
+  autoAdd: boolean("auto_add").default(false).notNull(),
+});
+
 export const events = pgTable(
   "events",
   {
@@ -47,6 +55,12 @@ export const events = pgTable(
     startsAt: timestamp("starts_at", { withTimezone: true, mode: "string" }),
     endsAt: timestamp("ends_at", { withTimezone: true, mode: "string" }),
     venueName: text("venue_name"),
+    // Set by the webhook when the event matches a tracked venue; null for
+    // venues not in `sources` (e.g. manual submissions). Venue pages filter on it.
+    venueSlug: text("venue_slug").references(() => sources.slug, {
+      onUpdate: "cascade",
+      onDelete: "set null",
+    }),
     address: text("address"),
     firstSeenAt: timestamp("first_seen_at", {
       withTimezone: true,
@@ -72,13 +86,6 @@ export const events = pgTable(
       .using("btree", table.startsAt.asc().nullsLast().op("timestamptz_ops"))
       .where(sql`is_active`),
     unique("events_source_id_key").on(table.sourceId),
+    index("events_venue_slug_idx").on(table.venueSlug),
   ],
 );
-
-export const sources = pgTable("sources", {
-  id: bigserial("id", { mode: "number" }).primaryKey().notNull(),
-  name: text("name").notNull().default(""),
-  page: text("page").notNull(),
-  slug: text("slug").notNull().unique(),
-  autoAdd: boolean("auto_add").default(false).notNull(),
-});

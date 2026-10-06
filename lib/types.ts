@@ -5,6 +5,7 @@ export interface ScrapedEvent {
   startsAt: string | null;
   endsAt: string | null;
   venueName: string | null;
+  venueSlug: string | null;
   address: string | null;
   image: string;
   description: string;
@@ -18,6 +19,7 @@ export interface ScrapedEventFromDB {
   startsAt: string | null;
   endsAt: string | null;
   venueName: string | null;
+  venueSlug: string | null;
   address: string | null;
   image: string;
   description: string;

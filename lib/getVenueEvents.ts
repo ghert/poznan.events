@@ -3,7 +3,6 @@ import { events } from "@/lib/db/schema";
 import { ScrapedEventFromDB } from "./types";
 import { cacheLife, cacheTag } from "next/cache";
 import { and, eq, gt, sql } from "drizzle-orm";
-import slugify from "slugify";
 
 export async function getVenueEvents(
   venue: string,
@@ -21,11 +20,13 @@ export async function getVenueEvents(
       sourceId: events.sourceId,
     })
     .from(events)
-    .where(and(eq(events.isActive, true), gt(events.endsAt, sql`now()`)));
+    .where(
+      and(
+        eq(events.isActive, true),
+        gt(events.endsAt, sql`now()`),
+        eq(events.venueSlug, venue),
+      ),
+    );
 
-  const venueEvents = rows.filter(
-    (row) => venue === slugify(row.venueName ?? "", { lower: true }),
-  );
-
-  return venueEvents as ScrapedEventFromDB[];
+  return rows as ScrapedEventFromDB[];
 }
