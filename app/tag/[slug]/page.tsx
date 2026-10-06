@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!tag) return { title: "Nie znaleziono tagu" };
 
   return {
-    title: `${tag.emoji} ${tag.name} | poznan.events`,
+    title: `${tag.name} ${tag.emoji} | poznan.events`,
     description: `${tag.name}: wydarzenia w Poznaniu`,
   };
 }

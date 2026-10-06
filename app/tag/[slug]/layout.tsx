@@ -27,7 +27,11 @@ async function TagEvents({ params }: { params: Promise<{ slug: string }> }) {
   const tag = tags.find((t) => t.slug === slug);
   return (
     <EventsListSimple
-      title={tag ? `${tag.emoji} ${tag.name}` : ""}
+      title={
+        tag
+          ? `${tag.name.charAt(0).toUpperCase()}${tag.name.slice(1)} ${tag.emoji}`
+          : ""
+      }
       events={events}
       basePath={`/tag/${slug}`}
     />

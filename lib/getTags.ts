@@ -12,5 +12,5 @@ export async function getTags(): Promise<Tag[]> {
   return db
     .select({ slug: tags.slug, name: tags.name, emoji: tags.emoji })
     .from(tags)
-    .orderBy(asc(tags.name));
+    .orderBy(asc(tags.id));
 }
