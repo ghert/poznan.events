@@ -33,6 +33,7 @@ export default function EventsListItem({
         href={`${basePath}/wydarzenie/${event.id}`}
         scroll={false}
         onClick={onClick}
+        prefetch={false}
       >
         <span
           className={`hover:underline cursor-pointer max-md:text-lg ${enabled ? "font-bold" : "none"}`}
