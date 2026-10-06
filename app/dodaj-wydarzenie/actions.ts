@@ -1,11 +1,11 @@
 "use server";
 
-import { TZDate } from "@date-fns/tz";
 import { checkBotId } from "botid/server";
 import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema";
 import { triggerBrightData } from "@/lib/brightdata";
 import { ImageValidationError, uploadEventImage } from "@/lib/r2";
+import { parseWarsawLocal } from "@/lib/warsawTime";
 
 // Submissions are inserted with is_active = false and wait for manual
 // approval, so neither action revalidates anything — nothing visible changes.
@@ -55,16 +55,6 @@ export async function submitFacebookUrl(
   }
 
   return { ok: true, message: THANKS };
-}
-
-// <input type="datetime-local"> gives "YYYY-MM-DDTHH:mm" with no zone;
-// interpret it as Poznań local time.
-function parseWarsawLocal(value: string): Date | null {
-  const m = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
-  if (!m) return null;
-  const [, y, mo, d, h, mi] = m.map(Number);
-  const date = new TZDate(y, mo - 1, d, h, mi, "Europe/Warsaw");
-  return Number.isNaN(date.getTime()) ? null : date;
 }
 
 export async function submitManualEvent(

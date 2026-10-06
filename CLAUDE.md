@@ -26,7 +26,7 @@ This is a Next.js App Router site that scrapes event listings from local venues'
 
 ### Cache Components
 
-`next.config.ts` sets `cacheComponents: true`. Nearly every data-fetching function in `lib/get*.ts` is wrapped in `'use cache'` + `cacheLife('days')` + `cacheTag('events')`. `app/webhook/route.ts` calls `revalidateTag('events', 'days')` and `revalidatePath('/', 'layout')` after writing new data — that's the only place cache invalidation happens. When touching any `lib/get*.ts` function or a route that mutates `events`/`scrape_runs`, preserve this pattern.
+`next.config.ts` sets `cacheComponents: true`. Nearly every data-fetching function in `lib/get*.ts` is wrapped in `'use cache'` + `cacheLife('days')` + `cacheTag('events')`. `app/webhook/route.ts` calls `revalidateTag('events', 'days')` and `revalidatePath('/', 'layout')` after writing new data. In `app/admin/actions.ts`, `saveEvents` calls `updateTag('events')` + `revalidatePath('/', 'layout')`, and `revalidateSite` (the admin "Odśwież stronę" button) calls `updateTag` for every cache tag (`events`, `sources`, `tags`) + `revalidatePath('/', 'layout')`. Those are the only places cache invalidation happens; add any new `cacheTag` to `revalidateSite`. When touching any `lib/get*.ts` function or a route that mutates `events`/`scrape_runs`, preserve this pattern.
 
 ### Data layer
 
@@ -51,6 +51,13 @@ Two-step, cron-driven flow across two route handlers:
 
 `app/dodaj-wydarzenie/actions.ts` has two Server Actions, both gated by Vercel BotID (`checkBotId()`; client side registered in `instrumentation-client.ts`, config wrapped in `withBotId`). A Facebook URL triggers a Bright Data collect-by-URL job (`lib/brightdata.ts`) that delivers to `/webhook?origin=submission`. The manual form uploads the image to Cloudflare R2 (`lib/r2.ts`) and inserts directly. Every submission lands with `is_active = false, submitted = true` and waits for manual approval. Submission paths deliberately **don't revalidate** the cache. Submission webhook deliveries also skip the `scrape_runs` update and the 5-day soft-delete. `submitted` rows are exempt from that soft-delete, because the scrape never re-sees them.
 
+### Admin panel (`/admin`)
+
+- Protected by HTTP Basic Auth (`ADMIN_USER` / `ADMIN_PASSWORD`, `lib/adminAuth.ts`). It fails closed if either is unset. `proxy.ts` triggers the browser login prompt, but auth is **re-checked in the page and in `saveEvents`**: Proxy is only an optimistic check, and a Server Action can be POSTed to from any route.
+- `app/admin/page.tsx` loads all upcoming events, active or not, **uncached**, inside `<Suspense>` because it reads `headers()`. `components/AdminPanel.tsx` keeps a draft only for rows that differ from the loaded data. The floating save button sends them all to `saveEvents`, which validates every row first, then writes the updates and replaces each saved event's tags in one `db.batch`.
+- Editable per event: title, description, start/end, `is_active`, tags, `venue_name`, and `venue_slug` (a select over `sources`, empty for none; validated server-side against `sources.slug`).
+- Dates in the panel and the submission form are Poznań-local `datetime-local` strings, converted with `lib/warsawTime.ts` (`parseWarsawLocal` / `toWarsawLocal`).
+
 ### Routing
 
 - `/` and `/wydarzenie/[id]` both render the full `EventsList` (via `getEvents()`), with `/wydarzenie/[id]` additionally showing `EventDetails` in a `Suspense` boundary — the list is always visible, details slot in on top.
@@ -66,6 +73,7 @@ Set in `.env` / Vercel:
 - `WEBHOOK_SECRET`: bearer token Bright Data sends back to `/webhook`
 - `API_TOKEN`, `DATASET_ID`, `BACKEND_URL`: Bright Data API token, dataset id and trigger endpoint (`lib/brightdata.ts`)
 - `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `R2_PUBLIC_URL`: Cloudflare R2 for `/dodaj-wydarzenie` image uploads (`lib/r2.ts`)
+- `ADMIN_USER`, `ADMIN_PASSWORD`: Basic Auth credentials for `/admin` (`lib/adminAuth.ts`)
 
 Provided by Vercel automatically (system env vars, not in `.env`):
 

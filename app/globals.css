@@ -124,7 +124,8 @@ html {
   scroll-behavior: smooth;
 }
 
-.input:is([type="date"], [type="time"], [type="datetime-local"]) {
+.input:is([type="date"], [type="time"], [type="datetime-local"]),
+.input :is([type="date"], [type="time"], [type="datetime-local"]) {
   color: oklch(from var(--color-base-content) l 0 h);
 }
 
