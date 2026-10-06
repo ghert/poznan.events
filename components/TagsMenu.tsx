@@ -29,7 +29,7 @@ export default function TagsMenu({ tags }: { tags: Tag[] }) {
           aria-current={tag.slug === currentTag ? "page" : undefined}
           className={`group border-surface-300 hover:bg-base-content hover:text-base-100 border-1 rounded-3xl px-4 py-1 whitespace-nowrap ${tag.slug === currentTag ? "bg-base-content text-base-100" : ""}`}
         >
-          {HEADER_LABELS[tag.slug] ?? tag.name} {tag.emoji}
+          {HEADER_LABELS[tag.slug] ?? tag.name}
         </Link>
       ))}
     </nav>
