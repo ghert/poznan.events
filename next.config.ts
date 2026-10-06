@@ -3,10 +3,22 @@ import { withBotId } from "botid/next/config";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  async redirects() {
+    return [
+      {
+        source: "/venue/:slug",
+        destination: "/miejsce/:slug",
+        permanent: true,
+      },
+      {
+        source: "/event/:slug",
+        destination: "/wydarzenie/:slug",
+        permanent: true,
+      },
+    ];
+  },
   experimental: {
     serverActions: {
-      // Room for a 3.5 MB event image (lib/r2.ts) plus multipart overhead,
-      // while staying under Vercel's 4.5 MB request body cap.
       bodySizeLimit: "4mb",
     },
   },
