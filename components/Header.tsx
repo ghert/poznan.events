@@ -10,7 +10,7 @@ export default async function Header() {
   return (
     <div className="flex justify-between items-center w-full">
       <div className="flex items-center">
-        <MobileDrawer />
+        <MobileDrawer tags={tags} />
         <Link href="/" className="active:opacity-50">
           <h2 className="logo mb-2 font-bold text-4xl">poznan.events</h2>
         </Link>
