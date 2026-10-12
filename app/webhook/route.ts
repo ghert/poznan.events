@@ -83,11 +83,17 @@ export async function POST(request: Request) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  // Deliveries triggered from /dodaj-wydarzenie (see app/dodaj-wydarzenie/actions.ts).
-  // Their rows wait for manual approval, so they must not touch scrape_runs,
-  // the soft-delete, or the cache.
-  const isSubmission =
-    new URL(request.url).searchParams.get("origin") === "submission";
+  // Besides the daily venue scrape, two other Bright Data jobs deliver here:
+  // - "submission": a URL sent from /dodaj-wydarzenie. New rows wait for
+  //   manual approval, so nothing is revalidated.
+  // - "refresh": the daily re-collect of submitted events (app/scrape/route.ts),
+  //   which the venue scrape doesn't see; it keeps their (expiring) Facebook
+  //   image URLs fresh, so it does revalidate.
+  // Neither touches scrape_runs or runs the soft-delete.
+  const origin = new URL(request.url).searchParams.get("origin");
+  const isSubmission = origin === "submission";
+  const isRefresh = origin === "refresh";
+  const isVenueScrape = !isSubmission && !isRefresh;
 
   try {
     const payload = await request.json();
@@ -148,8 +154,8 @@ export async function POST(request: Request) {
                  v.starts_at::timestamptz, v.ends_at::timestamptz,
                  v.venue_name, v.venue_slug, v.address, v.description, v.image,
                  now(),
-                 ${isSubmission ? sql`false` : sql`coalesce(s.auto_add, false)`},
-                 ${isSubmission}
+                 ${isVenueScrape ? sql`coalesce(s.auto_add, false)` : sql`false`},
+                 ${!isVenueScrape}
           from jsonb_to_recordset(${json}::jsonb)
             as v(
             source_id text, source_url text, title text, starts_at text,
@@ -165,7 +171,7 @@ export async function POST(request: Request) {
       ]);
     }
 
-    if (!isSubmission) {
+    if (isVenueScrape) {
       await db.execute(sql`
         update events
         set is_active = false
@@ -184,7 +190,9 @@ export async function POST(request: Request) {
           limit 1
         )
       `);
+    }
 
+    if (!isSubmission) {
       revalidateTag("events", "days");
       revalidatePath("/", "layout");
     }
@@ -196,7 +204,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    if (!isSubmission) {
+    if (isVenueScrape) {
       await db.execute(sql`
         update scrape_runs
         set status = 'failed', completed_at = now(), error = ${message}
