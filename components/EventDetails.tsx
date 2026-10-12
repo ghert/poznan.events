@@ -64,7 +64,7 @@ export default async function EventDetails({
                     href={`/tag/${tag.slug}`}
                     className="badge badge-soft badge-xl active:opacity-50 hover:opacity-70"
                   >
-                    {tag.name} {tag.emoji}
+                    {tag.name}
                   </Link>
                 ))}
               </div>
