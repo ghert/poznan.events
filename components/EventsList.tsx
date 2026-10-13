@@ -12,7 +12,7 @@ export default function EventsList({
   weekBoundaries: { start: string; end: string; nextEnd: string };
 }) {
   const pathname = usePathname();
-  const currentId = pathname.match(/^\/event\/(\d+)/)?.[1] ?? NaN;
+  const currentId = pathname.match(/^\/wydarzenie\/(\d+)/)?.[1] ?? NaN;
   const thisWeekStart = new Date(start);
   const thisWeekEnd = new Date(end);
   const nextWeekEnd = new Date(nextEnd);

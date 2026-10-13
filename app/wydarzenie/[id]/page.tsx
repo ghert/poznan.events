@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${event.title}`,
     description: `${event.title}, ${event.venueName ?? "Poznań"}.`,
-    alternates: { canonical: `/event/${event.id}` },
+    alternates: { canonical: `/wydarzenie/${event.id}` },
   };
 }
 

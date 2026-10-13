@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { hasBearer } from "@/lib/bearerAuth";
 import { db } from "@/lib/db";
 import { events, scrapeRuns } from "@/lib/db/schema";
 import { and, desc, eq, like, ne, sql } from "drizzle-orm";
@@ -8,9 +9,7 @@ import { triggerBrightData } from "@/lib/brightdata";
 const MIN_HOURS_BETWEEN_RUNS = 40;
 
 export async function GET(request: Request) {
-  if (
-    request.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
+  if (!hasBearer(request, process.env.CRON_SECRET)) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 

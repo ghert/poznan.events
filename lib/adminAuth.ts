@@ -6,7 +6,7 @@ export const ADMIN_REALM = 'Basic realm="poznan.events admin", charset="UTF-8"';
 
 // Compares every character regardless of where the first mismatch is, so
 // response timing doesn't reveal how much of the password was right.
-function safeEqual(a: string, b: string): boolean {
+export function safeEqual(a: string, b: string): boolean {
   let diff = a.length ^ b.length;
   for (let i = 0; i < Math.max(a.length, b.length); i++) {
     diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);

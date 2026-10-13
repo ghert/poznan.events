@@ -85,7 +85,7 @@ export default async function EventDetails({
                 <div className="md:tooltip" data-tip="Dodaj do kalendarza">
                   <a
                     className="btn btn-sm btn-soft"
-                    href={`/event/${event.id}/calendar.ics`}
+                    href={`/wydarzenie/${event.id}/calendar.ics`}
                     download
                   >
                     <CalendarPlus size="16" />

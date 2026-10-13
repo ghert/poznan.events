@@ -11,7 +11,7 @@ export default function EventJsonLd({ event }: { event: ScrapedEventFromDB }) {
     startDate: new Date(event.startsAt).toISOString(),
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    url: `${BASE_URL}/event/${event.id}`,
+    url: `${BASE_URL}/wydarzenie/${event.id}`,
     image: event.image ? [event.image] : undefined,
     description: event.description || undefined,
     location: {

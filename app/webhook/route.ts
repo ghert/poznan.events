@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { hasBearer } from "@/lib/bearerAuth";
 import { db } from "@/lib/db";
 import { sql } from "drizzle-orm";
 import { sources } from "@/lib/db/schema";
@@ -76,10 +77,7 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 
 export async function POST(request: Request) {
-  if (
-    request.headers.get("authorization") !==
-    `Bearer ${process.env.WEBHOOK_SECRET}`
-  ) {
+  if (!hasBearer(request, process.env.WEBHOOK_SECRET)) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
@@ -125,7 +123,7 @@ export async function POST(request: Request) {
             title        = v.title,
             starts_at    = v.starts_at::timestamptz,
             ends_at      = v.ends_at::timestamptz,
-            venue_name   = v.venue_name,
+            venue_name   = coalesce(nullif(v.venue_name, ''), e.venue_name),
             venue_slug   = coalesce(v.venue_slug, e.venue_slug),
             address      = v.address,
             description  = v.description,

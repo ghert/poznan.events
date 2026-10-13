@@ -21,7 +21,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const venues = await getFilterVenues();
   return (
     <html
-      lang="en"
+      lang="pl"
       className={`h-full antialiased`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning

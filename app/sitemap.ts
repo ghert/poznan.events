@@ -37,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 0.8,
     })),
-    // Only /event/[id] is listed — /venue/[slug]/event/[id] canonicalizes to it.
+    // Only /wydarzenie/[id] is listed; the /miejsce and /tag copies canonicalize to it.
     ...events.map((event) => ({
       url: `${BASE_URL}/wydarzenie/${event.id}`,
       changeFrequency: "weekly" as const,

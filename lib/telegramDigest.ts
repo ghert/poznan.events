@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { hasBearer } from "@/lib/bearerAuth";
 import { and, asc, eq, gte, lte } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema";
@@ -35,10 +36,7 @@ export function telegramDigest(
   range: (now: Date) => { start: Date; end: Date },
 ) {
   return async function GET(request: Request) {
-    if (
-      request.headers.get("authorization") !==
-      `Bearer ${process.env.CRON_SECRET}`
-    ) {
+    if (!hasBearer(request, process.env.CRON_SECRET)) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 

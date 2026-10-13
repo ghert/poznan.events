@@ -57,7 +57,7 @@ export function buildIcs(
     `SUMMARY:${escapeText(event.title)}`,
     ...(location ? [`LOCATION:${escapeText(location)}`] : []),
     `DESCRIPTION:${escapeText(description)}`,
-    `URL:https://poznan.events/event/${event.id}`,
+    `URL:https://poznan.events/wydarzenie/${event.id}`,
     "END:VEVENT",
     "END:VCALENDAR",
   ];
