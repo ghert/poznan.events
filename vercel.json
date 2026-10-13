@@ -4,6 +4,10 @@
     {
       "path": "/scrape",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/telegram",
+      "schedule": "0 6 * * 1"
     }
   ]
 }

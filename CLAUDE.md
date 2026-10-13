@@ -47,6 +47,10 @@ Two-step, cron-driven flow across two route handlers:
 
 `lib/types.ts` has three related-but-distinct shapes: `Row` (raw Bright Data payload — snake_case, an external contract, don't rename), `ScrapedEvent` (normalized, camelCase, pre-insert), `ScrapedEventFromDB` (camelCase, what Drizzle queries return).
 
+### Weekly Telegram post
+
+`app/telegram/route.ts` (`GET`, Vercel cron every Monday 06:00 UTC, `CRON_SECRET`-protected like `/scrape`) posts every active event starting in the current Mon–Sun week (Poznań time) to a Telegram channel via the Bot API (`lib/telegram.ts`), grouped by day, as HTML messages split under Telegram's 4096-char limit. It queries the DB directly (uncached) and doesn't write or revalidate anything. Hitting it again re-posts; there's no dedupe.
+
 ### User submissions (`/dodaj-wydarzenie`)
 
 `app/dodaj-wydarzenie/actions.ts` has two Server Actions, both gated by Vercel BotID (`checkBotId()`; client side registered in `instrumentation-client.ts`, config wrapped in `withBotId`). A Facebook URL triggers a Bright Data collect-by-URL job (`lib/brightdata.ts`) that delivers to `/webhook?origin=submission`. The manual form uploads the image to Cloudflare R2 (`lib/r2.ts`) and inserts directly. Every submission lands with `is_active = false, submitted = true` and waits for manual approval. Submission paths deliberately **don't revalidate** the cache. Submission webhook deliveries also skip the `scrape_runs` update and the 5-day soft-delete. `submitted` rows are exempt from that soft-delete, because the scrape never re-sees them. To keep their expiring Facebook image URLs fresh, `/scrape` also starts a daily collect-by-URL job for upcoming submitted events with a Facebook `source_url` (`triggerSubmittedRefresh`), delivering to `/webhook?origin=refresh`. Refresh deliveries update existing rows and **do** revalidate, but also skip `scrape_runs` and the soft-delete; a failed refresh trigger never fails the cron run.
@@ -74,6 +78,7 @@ Set in `.env` / Vercel:
 - `API_TOKEN`, `DATASET_ID`, `BACKEND_URL`: Bright Data API token, dataset id and trigger endpoint (`lib/brightdata.ts`)
 - `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `R2_PUBLIC_URL`: Cloudflare R2 for `/dodaj-wydarzenie` image uploads (`lib/r2.ts`)
 - `ADMIN_USER`, `ADMIN_PASSWORD`: Basic Auth credentials for `/admin` (`lib/adminAuth.ts`)
+- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`: bot token and channel id (or `@channelname`) for the weekly post (`lib/telegram.ts`)
 
 Provided by Vercel automatically (system env vars, not in `.env`):
 
