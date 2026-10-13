@@ -6,7 +6,7 @@ import Filters from "@/components/Filters";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/ThemeToggle";
-import { getVenues } from "@/lib/getVenues";
+import { getFilterVenues } from "@/lib/getFilterVenues";
 import Header from "@/components/Header";
 
 const GeistSans = Geist();
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const venues = await getVenues();
+  const venues = await getFilterVenues();
   return (
     <html
       lang="en"
