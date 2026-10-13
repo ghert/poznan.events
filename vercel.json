@@ -8,6 +8,10 @@
     {
       "path": "/telegram",
       "schedule": "0 6 * * 1"
+    },
+    {
+      "path": "/telegram/weekend",
+      "schedule": "0 6 * * 5"
     }
   ]
 }

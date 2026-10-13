@@ -47,9 +47,14 @@ Two-step, cron-driven flow across two route handlers:
 
 `lib/types.ts` has three related-but-distinct shapes: `Row` (raw Bright Data payload — snake_case, an external contract, don't rename), `ScrapedEvent` (normalized, camelCase, pre-insert), `ScrapedEventFromDB` (camelCase, what Drizzle queries return).
 
-### Weekly Telegram post
+### Telegram posts
 
-`app/telegram/route.ts` (`GET`, Vercel cron every Monday 06:00 UTC, `CRON_SECRET`-protected like `/scrape`) posts every active event starting in the current Mon–Sun week (Poznań time) to a Telegram channel via the Bot API (`lib/telegram.ts`), grouped by day, as HTML messages split under Telegram's 4096-char limit. It queries the DB directly (uncached) and doesn't write or revalidate anything. Hitting it again re-posts; there's no dedupe.
+Two Vercel crons post event digests to a Telegram channel via the Bot API (`lib/telegram.ts`), both `CRON_SECRET`-protected like `/scrape`:
+
+- `app/telegram/route.ts`, Monday 06:00 UTC: every active event starting in the current Mon–Sun week (Poznań time).
+- `app/telegram/weekend/route.ts`, Friday 06:00 UTC: every active event starting Friday–Sunday.
+
+Both are thin wrappers around `telegramDigest(heading, range)` in `lib/telegramDigest.ts`. It queries the DB directly (uncached), groups events by day, and sends HTML messages split under Telegram's 4096-char limit. It doesn't write or revalidate anything, and posts nothing if there are no events. Hitting a route again re-posts; there's no dedupe.
 
 ### User submissions (`/dodaj-wydarzenie`)
 
