@@ -5,7 +5,7 @@ import { FOOTER_LINKS } from "./navLinks";
 export default function Footer() {
   return (
     <footer className="m-auto footer max-w-7xl sm:footer-horizontal text-base-content rounded text-lg pt-8 pb-4 max-md:pt-0">
-      <nav className="flex justify-center w-full flex-wrap">
+      <nav className="flex justify-center w-full flex-wrap max-md:text-sm">
         {FOOTER_LINKS.map(({ href, label }, i) => (
           <Fragment key={href}>
             {i > 0 ? " · " : null}
