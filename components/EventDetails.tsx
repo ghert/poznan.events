@@ -47,9 +47,18 @@ export default async function EventDetails({
           <h2 className="text-2xl mb-4">{event.title}</h2>
           <div className="flex flex-wrap gap-x-4 gap-y-2 max-md:gap-x-2 mb-4">
             <div className="flex items-center gap-4 mb-1 max-md:gap-x-2">
-              <div className="badge badge-neutral badge-xl min-w-0">
-                <span className="truncate">{event.venueName}</span>
-              </div>
+              {event.venueSlug ? (
+                <Link
+                  href={`/miejsce/${event.venueSlug}`}
+                  className="badge badge-neutral badge-xl min-w-0 active:opacity-50 hover:opacity-70"
+                >
+                  <span className="truncate">{event.venueName}</span>
+                </Link>
+              ) : (
+                <div className="badge badge-neutral badge-xl min-w-0">
+                  <span className="truncate">{event.venueName}</span>
+                </div>
+              )}
               {event.startsAt ? (
                 <div className="badge badge-neutral badge-xl shrink-0">
                   {dateFmt.format(new Date(event.startsAt))}
