@@ -11,15 +11,15 @@ const DURATION_MS = 300;
 // Three bars that fold into an X when `open`.
 function MenuToggleIcon({ open }: { open: boolean }) {
   const bar =
-    "absolute left-1 w-4 h-0.5 rounded-full bg-current transition-[translate,rotate,opacity] duration-300 ease-out motion-reduce:transition-none";
+    "absolute left-px w-[22px] h-[2.5px] rounded-full bg-current transition-[translate,rotate,opacity] duration-300 ease-out motion-reduce:transition-none";
   return (
-    <span aria-hidden className="relative block size-6">
+    <span aria-hidden className="relative -top-px block size-6">
       <span
-        className={`${bar} top-[5px] ${open ? "translate-y-1.5 rotate-45" : ""}`}
+        className={`${bar} top-[2.75px] ${open ? "translate-y-2 rotate-45" : ""}`}
       />
-      <span className={`${bar} top-[11px] ${open ? "opacity-0" : ""}`} />
+      <span className={`${bar} top-[10.75px] ${open ? "opacity-0" : ""}`} />
       <span
-        className={`${bar} top-[17px] ${open ? "-translate-y-1.5 -rotate-45" : ""}`}
+        className={`${bar} top-[18.75px] ${open ? "-translate-y-2 -rotate-45" : ""}`}
       />
     </span>
   );
