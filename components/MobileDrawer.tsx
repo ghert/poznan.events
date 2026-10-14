@@ -80,6 +80,15 @@ export default function MobileDrawer({ tags }: { tags: Tag[] }) {
         }}
         className="m-0 p-0 w-full h-lvh max-w-none max-h-none bg-transparent backdrop:bg-transparent"
       >
+        <button
+          type="button"
+          aria-label="Zamknij"
+          onClick={close}
+          style={togglePos}
+          className="btn btn-sm btn-square btn-ghost fixed z-10 p-0 border-0 text-base-content hover:bg-transparent focus:outline-0"
+        >
+          <MenuToggleIcon open={open} />
+        </button>
         <div
           onClick={close}
           className={`absolute inset-0 bg-black/40 transition-opacity duration-300 motion-reduce:transition-none ${open ? "opacity-100" : "opacity-0"}`}
@@ -118,15 +127,6 @@ export default function MobileDrawer({ tags }: { tags: Tag[] }) {
             </nav>
           </div>
         </div>
-        <button
-          type="button"
-          aria-label="Zamknij"
-          onClick={close}
-          style={togglePos}
-          className="btn btn-sm btn-square btn-ghost fixed p-0 border-0 text-base-content hover:bg-transparent focus:outline-0"
-        >
-          <MenuToggleIcon open={open} />
-        </button>
       </dialog>
     </>
   );
