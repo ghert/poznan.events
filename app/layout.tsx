@@ -8,10 +8,12 @@ import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getFilterVenues } from "@/lib/getFilterVenues";
 import Header from "@/components/Header";
+import { BASE_URL } from "@/lib/baseUrl";
 
 const GeistSans = Geist();
 
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: "poznan.events - wydarzenia i koncerty w Poznaniu",
   description:
     "Imprezy, DJ sety, jam session i muzyka na żywo w jednym miejscu. Blue note, schron, tama, farby, ślina.",

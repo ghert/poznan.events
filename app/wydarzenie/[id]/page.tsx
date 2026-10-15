@@ -1,10 +1,10 @@
 import EventDetails from "@/components/EventDetails";
 import EventsList from "@/components/EventsList";
-import { getEvent } from "@/lib/getEvent";
 import { getEvents } from "@/lib/getEvents";
 import { getWeekBoundaries } from "@/lib/getWeekBoundaries";
 import { ScrapedEventFromDB } from "@/lib/types";
 import { Metadata } from "next";
+import { eventMetadata } from "@/lib/eventMetadata";
 import { Suspense } from "react";
 
 type Params = { params: Promise<{ id: string }> };
@@ -15,15 +15,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { id } = await params;
-  const event = await getEvent(id);
-  if (!event) return { title: "Nie znaleziono wydarzenia" };
-
-  return {
-    title: `${event.title}`,
-    description: `${event.title}, ${event.venueName ?? "Poznań"}.`,
-    alternates: { canonical: `/wydarzenie/${event.id}` },
-  };
+  return eventMetadata((await params).id);
 }
 
 export default async function EventPage({ params }: Params) {
