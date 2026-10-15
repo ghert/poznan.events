@@ -8,19 +8,22 @@ import { Tag } from "@/lib/types";
 
 const DURATION_MS = 300;
 
-// Three bars that fold into an X when `open`.
 function MenuToggleIcon({ open }: { open: boolean }) {
-  const bar =
-    "absolute left-px w-[22px] h-[2.5px] rounded-full bg-current transition-[translate,rotate,opacity] duration-300 ease-out motion-reduce:transition-none";
+  const bar = "absolute left-px w-[22px] h-[2.5px] rounded-full bg-current";
   return (
     <span aria-hidden className="relative -top-px block size-6">
-      <span
-        className={`${bar} top-[2.75px] ${open ? "translate-y-2 rotate-45" : ""}`}
-      />
-      <span className={`${bar} top-[10.75px] ${open ? "opacity-0" : ""}`} />
-      <span
-        className={`${bar} top-[18.75px] ${open ? "-translate-y-2 -rotate-45" : ""}`}
-      />
+      {open ? (
+        <>
+          <span className={`${bar} top-[10.75px] rotate-45 scale-x-125`} />
+          <span className={`${bar} top-[10.75px] -rotate-45 scale-x-125`} />
+        </>
+      ) : (
+        <>
+          <span className={`${bar} top-[2.75px]`} />
+          <span className={`${bar} top-[10.75px]`} />
+          <span className={`${bar} top-[18.75px]`} />
+        </>
+      )}
     </span>
   );
 }
