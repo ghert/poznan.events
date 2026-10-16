@@ -29,10 +29,10 @@ export default async function EventDetails({
   });
 
   return (
-    <div className="card bg-base-100 shadow-sm w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-4">
+    <div className="bg-base-100 shadow-none rounded-md w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-4">
       <EventJsonLd event={event} />
       <ScrollTo trigger={id} />
-      <figure className={`max-h-72 overflow-hidden relative rounded-t-lg`}>
+      <figure className={`max-h-72 overflow-hidden relative rounded-t-md`}>
         <Link
           href={backHref}
           aria-label="Zamknij"
@@ -42,7 +42,7 @@ export default async function EventDetails({
         </Link>
         <img key={event.image} src={event.image} alt="Grafika wydarzenia" />
       </figure>
-      <div className="card-body max-md:px-3 overflow-hidden">
+      <div className="card-body max-md:px-3 rounded-b-md overflow-hidden border-base-300 border-t-0 border">
         <div>
           <h2 className="text-2xl mb-4">{event.title}</h2>
           <div className="flex flex-wrap gap-x-4 gap-y-2 max-md:gap-x-2 mb-4">
@@ -82,7 +82,7 @@ export default async function EventDetails({
               {event.sourceUrl ? (
                 <div className="md:tooltip" data-tip="Otwórz na fb">
                   <a
-                    className="btn btn-sm btn-soft min-w-0 max-w-full"
+                    className="btn btn-sm btn-soft min-w-0 max-w-full rounded-l-sm"
                     href={event.sourceUrl}
                     target="__blank"
                   >
@@ -93,7 +93,7 @@ export default async function EventDetails({
               {event.startsAt ? (
                 <div className="md:tooltip" data-tip="Dodaj do kalendarza">
                   <a
-                    className="btn btn-sm btn-soft"
+                    className="btn btn-sm btn-soft rounded-r-sm"
                     href={`/wydarzenie/${event.id}/calendar.ics`}
                     download
                   >
