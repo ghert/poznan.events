@@ -8,7 +8,7 @@ import { withTags } from "./withTags";
 export async function getTagEvents(
   tagSlug: string,
 ): Promise<ScrapedEventFromDB[]> {
-  "use cache";
+  "use cache: remote";
   cacheTag("events");
   cacheLife("days");
   const rows = await db

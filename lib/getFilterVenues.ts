@@ -11,7 +11,7 @@ import { and, asc, desc, eq, exists, gt, sql } from "drizzle-orm";
 export async function getFilterVenues(): Promise<
   { slug: string; name: string }[]
 > {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag("sources", "events");
 

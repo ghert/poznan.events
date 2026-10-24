@@ -6,7 +6,7 @@ import { and, asc, eq, gt, sql } from "drizzle-orm";
 import { withTags } from "./withTags";
 
 export async function getEvents(): Promise<ScrapedEventFromDB[]> {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag("events");
   const rows = await db

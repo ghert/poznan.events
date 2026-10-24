@@ -6,7 +6,7 @@ import { asc } from "drizzle-orm";
 export async function getVenues(): Promise<
   { slug: string; name: string; page: string }[]
 > {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag("sources");
 

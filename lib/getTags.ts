@@ -5,7 +5,7 @@ import { asc } from "drizzle-orm";
 import { Tag } from "./types";
 
 export async function getTags(): Promise<Tag[]> {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag("tags");
 

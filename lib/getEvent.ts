@@ -6,7 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { withTags } from "./withTags";
 
 export async function getEvent(id: string): Promise<ScrapedEventFromDB | null> {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag("events");
   // Ids come straight from the URL; anything non-numeric is a 404, not a
