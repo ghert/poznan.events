@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ScrollRow from "./ScrollRow";
 
 function Filter({
   venue,
@@ -39,7 +40,10 @@ export default function Filters({
   const currentVenue = pathname.match(/^\/miejsce\/([^/]+)/)?.[1] ?? null;
 
   return (
-    <div className="flex gap-1 py-4 pt-2 mb-2 overflow-scroll max-sm:mx-[-16px] max-md:mx-[-32px] max-sm:px-4 max-md:px-8">
+    <ScrollRow
+      className="mb-2 max-sm:mx-[-16px] max-md:mx-[-32px]"
+      scrollerClassName="gap-1 py-3 max-sm:px-4 max-md:px-8"
+    >
       {venues.map((item) => (
         <Filter
           key={item.slug}
@@ -48,6 +52,6 @@ export default function Filters({
           enabled={item.slug === currentVenue}
         />
       ))}
-    </div>
+    </ScrollRow>
   );
 }
