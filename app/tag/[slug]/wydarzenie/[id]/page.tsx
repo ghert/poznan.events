@@ -2,8 +2,22 @@ import EventDetails from "@/components/EventDetails";
 import { Metadata } from "next";
 import { eventMetadata } from "@/lib/eventMetadata";
 import { Suspense } from "react";
+import { getTags } from "@/lib/getTags";
+import { getTagEvents } from "@/lib/getTagEvents";
 
 type Params = { params: Promise<{ id: string }> };
+
+// Prebuild every tag/event pair, so these pages are served from the CDN
+// instead of rendering (and querying the DB) on each request.
+export async function generateStaticParams() {
+  const tags = await getTags();
+  const pairs = await Promise.all(
+    tags.map(async ({ slug }) =>
+      (await getTagEvents(slug)).map((e) => ({ slug, id: String(e.id) })),
+    ),
+  );
+  return pairs.flat();
+}
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return eventMetadata((await params).id);

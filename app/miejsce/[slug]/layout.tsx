@@ -7,7 +7,7 @@ type Props = { children: ReactNode; params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const venues = await getVenues();
-  return venues.map((v) => ({ venue: v.slug }));
+  return venues.map((v) => ({ slug: v.slug }));
 }
 
 export default async function VenueLayout({ children, params }: Props) {

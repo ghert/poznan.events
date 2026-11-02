@@ -73,6 +73,7 @@ export async function saveEvents(
         startsAt: startsAt.toISOString(),
         endsAt: endsAt.toISOString(),
         isActive: Boolean(d.isActive),
+        featured: Boolean(d.featured),
         venueName: venueName || null,
         venueSlug,
       },

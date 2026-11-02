@@ -8,6 +8,7 @@ export type AdminEventDraft = {
   startsAt: string;
   endsAt: string;
   isActive: boolean;
+  featured: boolean;
   tagSlugs: string[];
   venueName: string;
   // "" when the event isn't linked to a venue in `sources`.

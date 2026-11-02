@@ -20,6 +20,7 @@ function toDraft(e: AdminEvent): AdminEventDraft {
     startsAt: e.startsAt,
     endsAt: e.endsAt,
     isActive: e.isActive,
+    featured: e.featured,
     tagSlugs: e.tagSlugs,
     venueName: e.venueName,
     venueSlug: e.venueSlug,
@@ -33,6 +34,7 @@ function sameDraft(a: AdminEventDraft, b: AdminEventDraft) {
     a.startsAt === b.startsAt &&
     a.endsAt === b.endsAt &&
     a.isActive === b.isActive &&
+    a.featured === b.featured &&
     a.venueName === b.venueName &&
     a.venueSlug === b.venueSlug &&
     [...a.tagSlugs].sort().join() === [...b.tagSlugs].sort().join()
@@ -103,6 +105,15 @@ function EventRow({
                 className="toggle toggle-sm toggle-success"
               />
               <span className="text-sm">aktywne</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer shrink-0">
+              <input
+                type="checkbox"
+                checked={draft.featured}
+                onChange={(e) => onChange({ featured: e.target.checked })}
+                className="toggle toggle-sm toggle-warning"
+              />
+              <span className="text-sm">polecane</span>
             </label>
           </div>
           {event.submitted ? (

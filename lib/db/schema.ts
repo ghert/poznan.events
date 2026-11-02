@@ -82,6 +82,8 @@ export const events = pgTable(
     // User-submitted via /dodaj-wydarzenie (manual form or FB URL). Exempt from
     // the webhook's "not seen in 5 days" soft-delete.
     submitted: boolean("submitted").default(false).notNull(),
+    // Set in /admin; shown in the homepage's right column.
+    featured: boolean("featured").default(false).notNull(),
   },
   (table) => [
     index("events_starts_at_idx")
