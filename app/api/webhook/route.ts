@@ -84,7 +84,7 @@ export async function POST(request: Request) {
   // Besides the daily venue scrape, two other Bright Data jobs deliver here:
   // - "submission": a URL sent from /dodaj-wydarzenie. New rows wait for
   //   manual approval, so nothing is revalidated.
-  // - "refresh": the daily re-collect of submitted events (app/scrape/route.ts),
+  // - "refresh": the daily re-collect of submitted events (app/api/scrape/route.ts),
   //   which the venue scrape doesn't see; it keeps their (expiring) Facebook
   //   image URLs fresh, so it does revalidate.
   // Neither touches scrape_runs or runs the soft-delete.

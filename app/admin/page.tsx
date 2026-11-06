@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { headers } from "next/headers";
-import { asc, sql } from "drizzle-orm";
+import { and, asc, isNotNull, isNull, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { events, sources, tags } from "@/lib/db/schema";
+import { events, sources, subscribers, tags } from "@/lib/db/schema";
 import { isAdminAuthorization } from "@/lib/adminAuth";
 import { withTags } from "@/lib/withTags";
 import { toWarsawLocal } from "@/lib/warsawTime";
@@ -32,7 +32,7 @@ async function AdminEvents() {
 
   // All upcoming events, active or not (pending submissions included).
   // Deliberately uncached: the panel must show the current DB state.
-  const [rows, allTags, venues] = await Promise.all([
+  const [rows, allTags, venues, activeSubscribers] = await Promise.all([
     db
       .select({
         id: events.id,
@@ -59,6 +59,16 @@ async function AdminEvents() {
       .select({ slug: sources.slug, name: sources.name })
       .from(sources)
       .orderBy(asc(sources.name)),
+    db
+      .select({ email: subscribers.email, confirmedAt: subscribers.confirmedAt })
+      .from(subscribers)
+      .where(
+        and(
+          isNotNull(subscribers.confirmedAt),
+          isNull(subscribers.unsubscribedAt),
+        ),
+      )
+      .orderBy(asc(subscribers.confirmedAt)),
   ]);
 
   const adminEvents: AdminEvent[] = (await withTags(rows)).map((e) => ({
@@ -77,5 +87,24 @@ async function AdminEvents() {
     submitted: e.submitted,
   }));
 
-  return <AdminPanel events={adminEvents} tags={allTags} venues={venues} />;
+  return (
+    <>
+      <AdminPanel events={adminEvents} tags={allTags} venues={venues} />
+      <details className="w-full max-w-7xl mt-8">
+        <summary className="cursor-pointer text-lg">
+          Newsletter: {activeSubscribers.length} subskrybentów
+        </summary>
+        <ul className="mt-2 flex flex-col gap-1 text-sm">
+          {activeSubscribers.map((s) => (
+            <li key={s.email}>
+              {s.email}{" "}
+              <span className="opacity-60">
+                {toWarsawLocal(s.confirmedAt).replace("T", " ")}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </>
+  );
 }

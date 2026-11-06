@@ -1,5 +1,5 @@
 /**
- * Kicks off a Bright Data job whose results are POSTed back to /webhook.
+ * Kicks off a Bright Data job whose results are POSTed back to /api/webhook.
  * `endpointQuery` is appended to the webhook URL so the webhook can tell
  * deliveries apart (e.g. "origin=submission").
  */
@@ -15,7 +15,7 @@ export async function triggerBrightData(
     format: "json",
     uncompressed_webhook: "true",
     notify: "true",
-    endpoint: `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/webhook${endpointQuery ? `?${endpointQuery}` : ""}`,
+    endpoint: `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}/api/webhook${endpointQuery ? `?${endpointQuery}` : ""}`,
     auth_header: `Bearer ${process.env.WEBHOOK_SECRET}`,
     ...extraParams,
   });

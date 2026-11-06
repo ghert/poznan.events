@@ -39,7 +39,7 @@ export async function submitFacebookUrl(
     };
 
   try {
-    // Collect-by-URL mode; the result lands in /webhook?origin=submission.
+    // Collect-by-URL mode; the result lands in /api/webhook?origin=submission.
     const result = await triggerBrightData([{ url }], {}, "origin=submission");
     if (!result.ok) {
       console.error(

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "Jakie dane przetwarza poznan.events, w jakim celu i jakie masz prawa.",
 };
 
-const UPDATED_AT = "4 października 2026";
+const UPDATED_AT = "6 listopada 2026";
 
 function Section({
   title,
@@ -42,8 +42,9 @@ export default function PrivacyPolicyPage() {
         Ta strona wyjaśnia, jakie dane przetwarza serwis poznan.events (dalej
         „Serwis”), w jakim celu, na jakiej podstawie i jakie prawa Ci
         przysługują. Serwis jest bezpłatnym, niekomercyjnym kalendarzem wydarzeń
-        w Poznaniu. Nie wymaga zakładania konta i nie prosi o imię, nazwisko ani
-        adres e-mail.
+        w Poznaniu. Nie wymaga zakładania konta i nie prosi o imię ani
+        nazwisko. Adres e-mail podajesz tylko wtedy, gdy zapisujesz się na
+        newsletter.
       </p>
 
       <Section title="1. Administrator danych">
@@ -81,6 +82,13 @@ export default function PrivacyPolicyPage() {
           Prosimy, aby zgłaszać tylko treści, do których publikacji masz prawo.
         </p>
         <p>
+          <strong>Newsletter.</strong> Jeśli zapiszesz się na newsletter,
+          przechowujemy Twój adres e-mail, daty zapisu, potwierdzenia i
+          ewentualnego wypisania oraz informację, który tygodniowy newsletter
+          ostatnio do Ciebie wysłaliśmy. Zapis wymaga potwierdzenia linkiem
+          wysłanym na podany adres.
+        </p>
+        <p>
           <strong>Ochrona przed botami.</strong> Formularz chroni Vercel BotID.
           Podczas wysyłania zgłoszenia przeglądarka wykonuje niewidoczny test,
           który analizuje techniczne cechy przeglądarki i urządzenia, aby
@@ -111,6 +119,11 @@ export default function PrivacyPolicyPage() {
             kulturalnych, art. 6 ust. 1 lit. f RODO;
           </li>
           <li>
+            wysyłanie newslettera: Twoja zgoda, art. 6 ust. 1 lit. a RODO. Zgodę
+            możesz wycofać w każdej chwili linkiem „Wypisz się” w każdej
+            wiadomości, bez wpływu na zgodność z prawem wcześniejszej wysyłki;
+          </li>
+          <li>
             publikowanie informacji o wydarzeniach pobranych z publicznych stron
             Facebooka: prawnie uzasadniony interes polegający na informowaniu o
             wydarzeniach w Poznaniu, art. 6 ust. 1 lit. f RODO.
@@ -130,7 +143,8 @@ export default function PrivacyPolicyPage() {
             Cloudflare, Inc.: przechowywanie grafik dodanych przez formularz
             (Cloudflare R2);
           </li>
-          <li>Umami Software, Inc.: statystyki odwiedzin.</li>
+          <li>Umami Software, Inc.: statystyki odwiedzin;</li>
+          <li>Resend, Inc.: wysyłka e-maili z newslettera.</li>
         </List>
         <p>
           Zatwierdzone wydarzenia, wraz z grafiką i opisem, są publicznie
@@ -159,6 +173,11 @@ export default function PrivacyPolicyPage() {
           <li>
             statystyki odwiedzin: w formie zagregowanej, bez możliwości
             powiązania z konkretną osobą;
+          </li>
+          <li>
+            adres e-mail z newslettera: do czasu wypisania się. Niepotwierdzone
+            zapisy i adresy po wypisaniu usuwamy na prośbę, a wypisany adres
+            nie dostaje już żadnych wiadomości;
           </li>
           <li>
             zgłoszone i pobrane wydarzenia oraz grafiki: przez czas działania

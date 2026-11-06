@@ -9,6 +9,7 @@ import {
   boolean,
   bigint,
   primaryKey,
+  date,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -115,5 +116,39 @@ export const eventTags = pgTable(
   (table) => [
     primaryKey({ columns: [table.eventId, table.tagId] }),
     index("event_tags_tag_id_idx").on(table.tagId),
+  ],
+);
+
+// Newsletter list. Double opt-in: active means confirmed and not unsubscribed.
+// `token` is in both the confirm and the unsubscribe links.
+export const subscribers = pgTable(
+  "subscribers",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey().notNull(),
+    email: text("email").notNull().unique(),
+    token: text("token").notNull().unique(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    confirmationSentAt: timestamp("confirmation_sent_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    confirmedAt: timestamp("confirmed_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    unsubscribedAt: timestamp("unsubscribed_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    // Monday (Poznań) of the last weekly digest sent to this subscriber. The
+    // daily /api/newsletter/send cron picks those still behind the current week.
+    lastDigestWeek: date("last_digest_week", { mode: "string" }),
+  },
+  (table) => [
+    index("subscribers_active_idx")
+      .on(table.confirmedAt)
+      .where(sql`confirmed_at is not null and unsubscribed_at is null`),
   ],
 );

@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 
     const refresh = await triggerSubmittedRefresh();
 
-    // Results arrive later at /webhook
+    // Results arrive later at /api/webhook
     return NextResponse.json({ ok: true, snapshotId: snapshot_id, refresh });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -97,7 +97,7 @@ async function triggerSubmittedRefresh() {
     if (rows.length === 0) return { skipped: true };
 
     // Collect-by-URL mode, same as a new submission; delivers to
-    // /webhook?origin=refresh.
+    // /api/webhook?origin=refresh.
     const result = await triggerBrightData(
       rows.map(({ url }) => ({ url })),
       {},

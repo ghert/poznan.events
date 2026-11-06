@@ -2,16 +2,20 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
     {
-      "path": "/scrape",
+      "path": "/api/scrape",
       "schedule": "0 7 * * *"
     },
     {
-      "path": "/telegram",
+      "path": "/api/telegram",
       "schedule": "0 6 * * 1"
     },
     {
-      "path": "/telegram/weekend",
+      "path": "/api/telegram/weekend",
       "schedule": "0 6 * * 5"
+    },
+    {
+      "path": "/api/newsletter/send",
+      "schedule": "15 6 * * *"
     }
   ]
 }
