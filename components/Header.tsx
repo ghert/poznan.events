@@ -3,6 +3,7 @@ import ThemeToggle from "./ThemeToggle";
 import { PlusIcon } from "lucide-react";
 import MobileDrawer from "./MobileDrawer";
 import TagsMenu from "./TagsMenu";
+import LogoLink from "./LogoLink";
 import { getTags } from "@/lib/getTags";
 
 export default async function Header() {
@@ -11,9 +12,7 @@ export default async function Header() {
     <div className="flex justify-between items-center w-full">
       <div className="flex items-center">
         <MobileDrawer tags={tags} />
-        <Link href="/" className="active:opacity-50 hover:opacity-70">
-          <h2 className="logo mb-2 font-bold text-4xl">poznan.events</h2>
-        </Link>
+        <LogoLink />
       </div>
       <div className="flex items-center gap-2 min-w-0 ml-6">
         <TagsMenu tags={tags} />
