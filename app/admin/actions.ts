@@ -6,7 +6,7 @@ import { eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { events, eventTags, sources, tags } from "@/lib/db/schema";
 import { isAdminAuthorization } from "@/lib/adminAuth";
-import { parseWarsawLocal } from "@/lib/warsawTime";
+import { MAX_VENUE_NAME, parseEventDraft } from "@/lib/eventDraft";
 import type { AdminEventDraft, SaveResult } from "./types";
 
 /**
@@ -32,29 +32,16 @@ export async function saveEvents(
 
   const rows = [];
   for (const d of drafts) {
-    const title = String(d.title ?? "").trim();
-    const startsAt = parseWarsawLocal(String(d.startsAt ?? ""));
-    const endsAt = parseWarsawLocal(String(d.endsAt ?? ""));
-    const label = title || `#${d.id}`;
-
     if (!Number.isSafeInteger(d.id))
       return { ok: false, message: "Nieprawidłowe wydarzenie." };
-    if (!title || title.length > 300)
-      return {
-        ok: false,
-        message: `${label}: podaj tytuł (maks. 300 znaków).`,
-      };
-    if (!startsAt || !endsAt)
-      return { ok: false, message: `${label}: podaj początek i koniec.` };
-    if (endsAt < startsAt)
-      return {
-        ok: false,
-        message: `${label}: koniec nie może być przed początkiem.`,
-      };
+    const label = String(d.title ?? "").trim() || `#${d.id}`;
+    const draft = parseEventDraft(d);
+    if (!draft.ok) return { ok: false, message: `${label}: ${draft.message}` };
+    const { title, startsAt, endsAt } = draft;
 
     const venueName = String(d.venueName ?? "").trim();
     const venueSlug = String(d.venueSlug ?? "") || null;
-    if (venueName.length > 200)
+    if (venueName.length > MAX_VENUE_NAME)
       return { ok: false, message: `${label}: nazwa miejsca jest za długa.` };
     if (venueSlug && !venueSlugs.has(venueSlug))
       return { ok: false, message: `${label}: nieznane miejsce.` };

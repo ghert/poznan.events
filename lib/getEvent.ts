@@ -21,6 +21,9 @@ export async function getEvent(id: string): Promise<ScrapedEventFromDB | null> {
     .limit(1);
 
   if (!rows[0]) return null;
+  // Lets a refresh delivery revalidate just this event's pages; the webhook
+  // only knows source_ids.
+  cacheTag(`event-${rows[0].sourceId}`);
   const [event] = await withTags(rows);
   return event as ScrapedEventFromDB;
 }

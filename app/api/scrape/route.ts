@@ -39,6 +39,7 @@ export async function GET(request: Request) {
         url: input.page,
         upcoming_events_only: true,
       })),
+      "scrape",
       {
         limit_per_input: "10",
         type: "discover_new",
@@ -100,8 +101,7 @@ async function triggerSubmittedRefresh() {
     // /api/webhook?origin=refresh.
     const result = await triggerBrightData(
       rows.map(({ url }) => ({ url })),
-      {},
-      "origin=refresh",
+      "refresh",
     );
     if (!result.ok) {
       console.error("Submitted refresh failed", result.status, result.body);

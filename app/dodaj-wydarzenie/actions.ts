@@ -5,7 +5,11 @@ import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema";
 import { triggerBrightData } from "@/lib/brightdata";
 import { ImageValidationError, uploadEventImage } from "@/lib/r2";
-import { parseWarsawLocal } from "@/lib/warsawTime";
+import {
+  capitalize,
+  MAX_VENUE_NAME,
+  parseEventDraft,
+} from "@/lib/eventDraft";
 
 // Submissions are inserted with is_active = false and wait for manual
 // approval, so neither action revalidates anything — nothing visible changes.
@@ -40,7 +44,7 @@ export async function submitFacebookUrl(
 
   try {
     // Collect-by-URL mode; the result lands in /api/webhook?origin=submission.
-    const result = await triggerBrightData([{ url }], {}, "origin=submission");
+    const result = await triggerBrightData([{ url }], "submission");
     if (!result.ok) {
       console.error(
         "Bright Data submission failed",
@@ -67,30 +71,25 @@ export async function submitManualEvent(
 
   const text = (key: string) => String(formData.get(key) ?? "").trim();
 
-  const title = text("title");
+  const draft = parseEventDraft({
+    title: formData.get("title"),
+    startsAt: formData.get("startsAt"),
+    endsAt: formData.get("endsAt"),
+  });
+  if (!draft.ok) return { ok: false, message: capitalize(draft.message) };
+  const { title, startsAt, endsAt } = draft;
   const description = text("description");
-  const startsAt = parseWarsawLocal(text("startsAt"));
-  const endsAt = parseWarsawLocal(text("endsAt"));
   const image = formData.get("image");
 
-  if (!title || title.length > 300)
-    return { ok: false, message: "Podaj tytuł (maks. 300 znaków)." };
   if (description.length > 10_000)
     return { ok: false, message: "Opis jest za długi." };
-  if (!startsAt || !endsAt)
-    return { ok: false, message: "Podaj datę rozpoczęcia i zakończenia." };
-  if (endsAt < startsAt)
-    return {
-      ok: false,
-      message: "Zakończenie nie może być przed rozpoczęciem.",
-    };
   if (!(image instanceof File) || image.size === 0)
     return { ok: false, message: "Dodaj grafikę wydarzenia." };
 
   // Known venues are already scraped, so submissions are for other places.
   const venueName = text("venueName");
   const address = text("address") || null;
-  if (!venueName || venueName.length > 200)
+  if (!venueName || venueName.length > MAX_VENUE_NAME)
     return { ok: false, message: "Podaj nazwę miejsca." };
 
   try {

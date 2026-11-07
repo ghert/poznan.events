@@ -32,7 +32,9 @@ export default async function EventDetails({
     <div className="bg-base-100 shadow-none rounded-md w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-4">
       <EventJsonLd event={event} />
       <ScrollTo trigger={id} />
-      <figure className={`max-h-72 overflow-hidden relative rounded-t-md`}>
+      <figure
+        className={`max-h-72 overflow-hidden relative rounded-t-md ${event.image ? "" : "hidden max-sm:block h-16 border-base-300 border border-b-0"}`}
+      >
         <Link
           href={backHref}
           aria-label="Zamknij"
@@ -40,9 +42,13 @@ export default async function EventDetails({
         >
           <X width={16} height={16} />
         </Link>
-        <img key={event.image} src={event.image} alt="Grafika wydarzenia" />
+        {event.image ? (
+          <img key={event.image} src={event.image} alt="Grafika wydarzenia" />
+        ) : null}
       </figure>
-      <div className="card-body max-md:px-3 rounded-b-md overflow-hidden border-base-300 border-t-0 border">
+      <div
+        className={`card-body max-md:px-3 rounded-b-md overflow-hidden border-base-300 border ${event.image ? "border-t-0" : "rounded-t-md max-sm:rounded-t-none max-sm:border-t-0"}`}
+      >
         <div>
           <h2 className="text-2xl mb-4">{event.title}</h2>
           <div className="flex flex-wrap gap-x-4 gap-y-2 max-md:gap-x-2 mb-4">
