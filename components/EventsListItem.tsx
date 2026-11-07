@@ -38,7 +38,10 @@ export default function EventsListItem({
           className={`hover:underline cursor-pointer max-md:text-lg ${enabled ? "font-bold" : "none"}`}
           key={event.sourceId}
         >
-          ({event.startsAt ? dateFormat.format(new Date(event.startsAt)) : ""}){" "}
+          <span className="tabular-nums mr-[0.5em] text-base-content">
+            ({event.startsAt ? dateFormat.format(new Date(event.startsAt)) : ""}
+            )
+          </span>
           {event.title}
         </span>
       </Link>
