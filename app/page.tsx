@@ -18,9 +18,16 @@ export default async function Home() {
         events={events as ScrapedEventFromDB[]}
         weekBoundaries={weekBoundaries}
       />
-      <div className="w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full max-md:mb-4 flex flex-col gap-4">
-        <FeaturedEvents events={featured} />
-        <NewsletterSection />
+      {/* On mobile the column dissolves (contents) so the parent's
+          flex-col-reverse puts featured above the list and, via order,
+          the newsletter below it. */}
+      <div className="w-1/2 max-w-1/2 flex flex-col gap-4 max-md:contents">
+        <div className="max-md:w-full max-md:mb-4 empty:hidden">
+          <FeaturedEvents events={featured} />
+        </div>
+        <div className="max-md:w-full max-md:-order-1">
+          <NewsletterSection />
+        </div>
       </div>
     </>
   );

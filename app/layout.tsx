@@ -55,7 +55,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <main className="m-auto flex flex-1 w-full flex-col">
             <Header />
             <Filters venues={venues} />
-            <div className="flex flex-row w-full items-start max-md:flex-col-reverse gap-4">
+            <div className="flex flex-row w-full items-start max-md:flex-col-reverse gap-8">
               {children}
             </div>
           </main>
