@@ -47,7 +47,7 @@ export default async function EventDetails({
         ) : null}
       </figure>
       <div
-        className={`card-body max-md:px-3 rounded-b-md overflow-hidden border-base-300 border ${event.image ? "border-t-0" : "rounded-t-md max-sm:rounded-t-none max-sm:border-t-0"}`}
+        className={`card-body max-md:px-3 dark:bg-neutral-900 rounded-b-md overflow-hidden border-base-300 border ${event.image ? "border-t-0" : "rounded-t-md max-sm:rounded-t-none max-sm:border-t-0"}`}
       >
         <div>
           <h2 className="text-2xl mb-4">{event.title}</h2>
@@ -61,34 +61,21 @@ export default async function EventDetails({
                   <span className="truncate">{event.venueName}</span>
                 </Link>
               ) : (
-                <div className="badge badge-neutral badge-xl min-w-0">
+                <div className="badge badge-neutral  badge-xl min-w-0">
                   <span className="truncate">{event.venueName}</span>
                 </div>
               )}
               {event.startsAt ? (
-                <div className="badge badge-neutral badge-xl shrink-0">
+                <div className="badge badge-soft badge-xl shrink-0">
                   {dateFmt.format(new Date(event.startsAt))}
                 </div>
               ) : null}
             </div>
-            {event.tags?.length ? (
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                {event.tags.map((tag) => (
-                  <Link
-                    key={tag.slug}
-                    href={`/tag/${tag.slug}`}
-                    className="badge badge-soft badge-xl active:opacity-50 hover:opacity-70"
-                  >
-                    {tag.name}
-                  </Link>
-                ))}
-              </div>
-            ) : null}
             <div className="join">
               {event.sourceUrl ? (
                 <div className="md:tooltip" data-tip="Otwórz na fb">
                   <a
-                    className="btn btn-sm btn-soft min-w-0 max-w-full rounded-l-sm"
+                    className="btn btn-sm btn-soft min-w-0 max-w-full"
                     href={event.sourceUrl}
                     target="__blank"
                   >
@@ -99,7 +86,7 @@ export default async function EventDetails({
               {event.startsAt ? (
                 <div className="md:tooltip" data-tip="Dodaj do kalendarza">
                   <a
-                    className="btn btn-sm btn-soft rounded-r-sm"
+                    className="btn btn-sm btn-soft"
                     href={`/wydarzenie/${event.id}/calendar.ics`}
                     download
                   >

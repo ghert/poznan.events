@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* daisyUI's dark theme with its blue tint removed: same lightness, zero chroma. */
+@plugin "daisyui/theme" {
+  name: "dark";
+  --color-base-100: oklch(25.33% 0 0);
+  --color-base-200: oklch(23.26% 0 0);
+  --color-base-300: oklch(21.15% 0 0);
+  --color-base-content: oklch(97.807% 0 0);
+  --color-neutral: oklch(14% 0 0);
+  --color-neutral-content: oklch(92% 0 0);
+}
+
 /* Enable class-based dark mode (v4 default is prefers-color-scheme, this overrides it) */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -39,9 +50,7 @@
 
 .badge {
     font-size: 1rem;
-    @apply px-3 rounded-sm;
 }
-
 
 @theme {
   --animate-squash: squash 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState, type CSSProperties } from "react";
-import { NAV_LINKS } from "./navLinks";
+import { MOBILE_LINKS } from "./navLinks";
 import { Tag } from "@/lib/types";
 
 const DURATION_MS = 300;
@@ -117,7 +117,7 @@ export default function MobileDrawer({ tags }: { tags: Tag[] }) {
               </nav>
             ) : null}
             <nav className="flex flex-col gap-4 text-2xl">
-              {NAV_LINKS.map(({ href, label }) => (
+              {MOBILE_LINKS.map(({ href, label }) => (
                 <Link
                   key={href}
                   href={href}
