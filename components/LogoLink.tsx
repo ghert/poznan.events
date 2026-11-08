@@ -93,7 +93,7 @@ export default function LogoLink() {
   }, []);
 
   return (
-    <Link ref={linkRef} href="/" className="relative isolate active:opacity-50">
+    <Link ref={linkRef} href="/" className="relative z-10 isolate active:opacity-50">
       <span
         ref={blobRef}
         aria-hidden
