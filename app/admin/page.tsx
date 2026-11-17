@@ -88,13 +88,27 @@ async function AdminEvents() {
   }));
 
   return (
-    <>
-      <AdminPanel events={adminEvents} tags={allTags} venues={venues} />
-      <details className="w-full max-w-7xl mt-8">
-        <summary className="cursor-pointer text-lg">
-          Newsletter: {activeSubscribers.length} subskrybentów
-        </summary>
-        <ul className="mt-2 flex flex-col gap-1 text-sm">
+    <div role="tablist" className="tabs tabs-lift w-full">
+      <input
+        type="radio"
+        name="admin_tabs"
+        role="tab"
+        className="tab text-lg"
+        aria-label={`Wydarzenia (${adminEvents.length})`}
+        defaultChecked
+      />
+      <div className="tab-content pt-4">
+        <AdminPanel events={adminEvents} tags={allTags} venues={venues} />
+      </div>
+      <input
+        type="radio"
+        name="admin_tabs"
+        role="tab"
+        className="tab text-lg"
+        aria-label={`Newsletter (${activeSubscribers.length})`}
+      />
+      <div className="tab-content pt-4">
+        <ul className="flex flex-col gap-1 text-sm">
           {activeSubscribers.map((s) => (
             <li key={s.email}>
               {s.email}{" "}
@@ -104,7 +118,7 @@ async function AdminEvents() {
             </li>
           ))}
         </ul>
-      </details>
-    </>
+      </div>
+    </div>
   );
 }
