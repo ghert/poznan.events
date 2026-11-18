@@ -43,14 +43,14 @@ export default async function EventDetails({
           <X width={16} height={16} />
         </Link>
         {event.image ? (
-          <img key={event.image} src={event.image} alt="Grafika wydarzenia" />
+          <img key={event.image} src={event.image} alt={event.title} />
         ) : null}
       </figure>
       <div
         className={`card-body max-md:px-3 dark:bg-neutral-900 rounded-b-md overflow-hidden border-base-300 border ${event.image ? "border-t-0" : "rounded-t-md max-sm:rounded-t-none max-sm:border-t-0"}`}
       >
         <div>
-          <h2 className="text-2xl mb-4">{event.title}</h2>
+          <h1 className="text-2xl mb-4">{event.title}</h1>
           <div className="flex flex-wrap gap-x-4 gap-y-2 max-md:gap-x-2 mb-4">
             <div className="flex items-center gap-4 mb-1 max-md:gap-x-2">
               {event.venueSlug ? (

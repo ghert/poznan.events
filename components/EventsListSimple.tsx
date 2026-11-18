@@ -14,7 +14,7 @@ export default function EventsListSimple({
 }) {
   return (
     <div className="w-1/2 max-w-1/2 max-md:max-w-full max-md:w-full">
-      <h3 className="text-2xl mb-1">{title}</h3>
+      <h1 className="text-2xl mb-1">{title}</h1>
       {events.map((event) => (
         <EventsListItem
           key={event.sourceId}

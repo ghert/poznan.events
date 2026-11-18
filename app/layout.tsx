@@ -3,9 +3,7 @@ import { Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Filters from "@/components/Filters";
-import Link from "next/link";
 import Footer from "@/components/Footer";
-import ThemeToggle from "@/components/ThemeToggle";
 import { getFilterVenues } from "@/lib/getFilterVenues";
 import Header from "@/components/Header";
 import { BASE_URL } from "@/lib/baseUrl";
@@ -16,7 +14,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: "poznan.events - wydarzenia i koncerty w Poznaniu",
   description:
-    "Imprezy, DJ sety, jam session i muzyka na żywo w jednym miejscu. Blue note, schron, tama, farby, ślina.",
+    "Muzyka, koncerty, DJ-sety, jam session, kultura. Tama, Schron, Blue Note...",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

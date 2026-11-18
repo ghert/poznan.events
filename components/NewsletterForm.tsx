@@ -59,7 +59,7 @@ export function SubscribeForm() {
 export function NewsletterCard() {
   return (
     <div className="bg-base-100 border-surface-300 border rounded-box p-6 max-sm:p-4">
-      <h3 className="text-2xl mb-4">Newsletter</h3>
+      <h2 className="text-2xl mb-4">Newsletter</h2>
       <SubscribeForm />
     </div>
   );

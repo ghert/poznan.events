@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import EventsList from "@/components/EventsList";
 import FeaturedEvents from "@/components/FeaturedEvents";
 import { NewsletterSection } from "@/components/NewsletterForm";
@@ -5,6 +6,8 @@ import { ScrapedEventFromDB } from "@/lib/types";
 import { getEvents } from "@/lib/getEvents";
 import { getFeaturedEvents } from "@/lib/getFeaturedEvents";
 import { getWeekBoundaries } from "@/lib/getWeekBoundaries";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function Home() {
   const [events, featured, weekBoundaries] = await Promise.all([

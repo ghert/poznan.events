@@ -11,7 +11,7 @@ export default function FeaturedEvents({
 
   return (
     <div>
-      <h3 className="text-2xl mb-1">Nasz wybór</h3>
+      <h2 className="text-2xl mb-1">Nasz wybór</h2>
       <div className="grid gap-4 max-md:flex max-md:gap-2 max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:-mx-8 max-md:px-8 max-md:scroll-px-8 max-sm:-mx-4 max-sm:px-4 max-sm:scroll-px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {withImages.map((event) => (
           <Link

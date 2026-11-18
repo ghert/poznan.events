@@ -11,7 +11,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
   return {
     title: `${venue.name} | poznan.events`,
-    description: `Wydarzenia muzyczne w ${venue.name} Poznań`,
+    description: `Koncerty i wydarzenia w ${venue.name} | Poznań.`,
+    alternates: { canonical: `/miejsce/${venue.slug}` },
   };
 }
 

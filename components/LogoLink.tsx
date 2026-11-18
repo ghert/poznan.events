@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 // How far the blob follows the cursor, as a share of its distance from the
@@ -20,6 +21,8 @@ const CENTER = "translate(-50%, -50%)";
 export default function LogoLink() {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const blobRef = useRef<HTMLSpanElement>(null);
+  // The homepage's main heading; elsewhere the page's own title is the h1.
+  const Heading = usePathname() === "/" ? "h1" : "div";
 
   // Tracked on the document, not the link, so the area around the logo can
   // show the blob without an invisible box covering the buttons next to it.
@@ -110,9 +113,9 @@ export default function LogoLink() {
           }}
         />
       </span>
-      <h2 className="logo mb-2 font-bold text-4xl transition-opacity duration-500">
+      <Heading className="logo mb-2 font-bold text-4xl transition-opacity duration-500">
         poznan.events
-      </h2>
+      </Heading>
     </Link>
   );
 }

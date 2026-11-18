@@ -12,6 +12,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${tag.name} ${tag.emoji} | poznan.events`,
     description: `${tag.name}: wydarzenia w Poznaniu`,
+    alternates: { canonical: `/tag/${tag.slug}` },
   };
 }
 
