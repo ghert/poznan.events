@@ -84,6 +84,10 @@ Weekly Mon–Sun digest by email, same content as the Monday Telegram post. The 
 - `/miejsce/[slug]` and `/tag/[slug]` mirror this with the presentational `EventsListSimple` (fed by `getVenueEvents(slug)` / `getTagEvents(slug)`): each `layout.tsx` renders the list, `page.tsx` is empty (metadata only), and `.../wydarzenie/[id]/page.tsx` shows details. Those pass `section="miejsce" | "tag"` to `EventDetails` so its back link returns to the right list.
 - All dynamic routes are fully static (`generateStaticParams` in each), revalidated only via the webhook's `revalidateTag`/`revalidatePath` calls, not on-request.
 
+### Instagram reel (`reel/`)
+
+A standalone HyperFrames video project (HTML rendered to MP4) for the weekly Instagram reel, not part of the Next.js app and ignored by ESLint. Run its commands from inside `reel/`; `reel/README.md` says how to update it for a new week and `reel/CLAUDE.md` covers HyperFrames itself.
+
 ### Env vars
 
 Set in `.env` / Vercel:

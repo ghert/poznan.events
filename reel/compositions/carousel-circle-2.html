@@ -1,0 +1,335 @@
+<!-- hyperframes-registry-item: carousel-circle-2 -->
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[{"id": "image1", "type": "image", "role": "content", "label": "Card image 1", "description": "Event poster 1 of 7.", "portrays": ["subject_image"], "default": "assets/img/546.jpg"}, {"id": "image2", "type": "image", "role": "content", "label": "Card image 2", "description": "Event poster 2 of 7.", "portrays": ["subject_image"], "default": "assets/img/334.jpg"}, {"id": "image3", "type": "image", "role": "content", "label": "Card image 3", "description": "Event poster 3 of 7.", "portrays": ["subject_image"], "default": "assets/img/502.jpg"}, {"id": "image4", "type": "image", "role": "content", "label": "Card image 4", "description": "Event poster 4 of 7.", "portrays": ["subject_image"], "default": "assets/img/395.jpg"}, {"id": "image5", "type": "image", "role": "content", "label": "Card image 5", "description": "Event poster 5 of 7.", "portrays": ["subject_image"], "default": "assets/img/545.jpg"}, {"id": "image6", "type": "image", "role": "content", "label": "Card image 6", "description": "Event poster 6 of 7.", "portrays": ["subject_image"], "default": "assets/img/510.jpg"}, {"id": "image7", "type": "image", "role": "content", "label": "Card image 7", "description": "Event poster 7 of 7.", "portrays": ["subject_image"], "default": "assets/img/419.jpg"}, {"id": "label", "type": "string", "role": "content", "label": "Circle label", "default": "poznan.events"}, {"id": "dates", "type": "string", "role": "content", "label": "Dates", "default": "20 - 22.11"}, {"id": "heading", "type": "string", "role": "content", "label": "Heading", "default": "Wydarzenia"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Intro carousel</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        background: transparent;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: transparent;
+      }
+      .scaler {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 2160px;
+        height: 3840px;
+        transform-origin: 0 0;
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      .stage {
+        position: absolute;
+        inset: 0;
+      }
+      .card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        will-change: transform;
+        backface-visibility: visible;
+      }
+      .card-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        background: #fff;
+      }
+      .card-inner img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      @font-face { font-family: "Geist"; src: url("assets/fonts/geist-latin.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      #cc-label { position: absolute; left: 0; top: 1700px; width: 1080px; display: flex; align-items: center; justify-content: center; font-family: "Geist", sans-serif; font-size: 40px; font-weight: 600; letter-spacing: -0.01em; color: #000; pointer-events: none; }
+      #cc-label span { display: inline-block; will-change: transform, opacity; }
+      #cc-heading { position: absolute; left: 72px; right: 72px; top: 300px; text-align: center; font-family: "Geist", sans-serif; color: #000; font-size: 64px; line-height: 1.1; font-weight: 500; letter-spacing: -0.035em; pointer-events: none; will-change: transform, opacity; }
+      #cc-white { position: absolute; inset: 0; background: #ffffff; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div
+      data-hf-id="hf-0m1b"
+      id="root"
+      data-composition-id="carousel-circle-2"
+      data-start="0"
+      data-width="1080"
+      data-height="1920"
+      data-duration="3.1"
+      data-fps="30"
+      data-layout-allow-overflow=""
+    >
+      <div id="carousel-circle-2-partA" class="clip" data-start="0" data-duration="3.1">
+        <div data-hf-id="hf-elyu" id="carousel-circle-2-scaler" class="scaler">
+          <div data-hf-id="hf-mi5e" id="carousel-circle-2-stage" class="stage"></div>
+        </div>
+        <div id="cc-label"><span id="cc-label-text" data-var-text="label">poznan.events</span></div>
+        <div id="cc-heading"><span data-var-text="heading">Wydarzenia</span><br /><span data-var-text="dates">20 - 22.11</span></div>
+        <div id="cc-white"></div>
+      </div>
+    </div>
+
+    <script>
+      // Trimmed from the carousel-circle-2 registry block: only the closed-path circle rig it uses.
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const clamp01 = (t) => (t < 0 ? 0 : t > 1 ? 1 : t);
+      const linear = (v, a, b, c, d) => (a === b ? c : lerp(c, d, clamp01((v - a) / (b - a))));
+      const wrap01 = (x) => {
+        const p = x % 1;
+        return p < 0 ? p + 1 : p;
+      };
+
+      // Closed cubic-bezier path sampled by arc length, centred on `center`.
+      function buildPath(vertices, center, samplesPerSeg = 64) {
+        const n = vertices.length;
+        const pts = [];
+        for (let s = 0; s < n; s++) {
+          const a = vertices[s],
+            b = vertices[(s + 1) % n];
+          const p0 = a.p,
+            p1 = [a.p[0] + a.out[0], a.p[1] + a.out[1]];
+          const p2 = [b.p[0] + b.in[0], b.p[1] + b.in[1]],
+            p3 = b.p;
+          const last = s === n - 1 ? samplesPerSeg : samplesPerSeg - 1;
+          for (let k = 0; k <= last; k++) {
+            const t = k / samplesPerSeg,
+              mt = 1 - t;
+            pts.push([
+              mt * mt * mt * p0[0] + 3 * mt * mt * t * p1[0] + 3 * mt * t * t * p2[0] + t * t * t * p3[0],
+              mt * mt * mt * p0[1] + 3 * mt * mt * t * p1[1] + 3 * mt * t * t * p2[1] + t * t * t * p3[1],
+            ]);
+          }
+        }
+        let x0 = Infinity,
+          x1 = -Infinity,
+          y0 = Infinity,
+          y1 = -Infinity;
+        for (const q of pts) {
+          x0 = Math.min(x0, q[0]);
+          x1 = Math.max(x1, q[0]);
+          y0 = Math.min(y0, q[1]);
+          y1 = Math.max(y1, q[1]);
+        }
+        const sx = center[0] - (x0 + x1) / 2,
+          sy = center[1] - (y0 + y1) / 2;
+        for (const q of pts) {
+          q[0] += sx;
+          q[1] += sy;
+        }
+        const cum = [0];
+        for (let i = 1; i < pts.length; i++)
+          cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+        const total = cum[cum.length - 1];
+        return function pointOnPath(pct) {
+          const target = wrap01(pct) * total;
+          let lo = 0,
+            hi = cum.length - 1;
+          while (hi - lo > 1) {
+            const mid = (lo + hi) >> 1;
+            if (cum[mid] <= target) lo = mid;
+            else hi = mid;
+          }
+          const f = (target - cum[lo]) / (cum[hi] - cum[lo] || 1);
+          return [lerp(pts[lo][0], pts[hi][0], f), lerp(pts[lo][1], pts[hi][1], f)];
+        };
+      }
+
+      // Card positions on the path, scaled by how far along the depth angle each card sits.
+      function circlePoses(pointOnPath, ctl, comp, n, u) {
+        const dAng = ctl.depthAngle * (Math.PI / 180);
+        const cx = comp.width / 2,
+          cy = comp.height / 2;
+        const maxDist = Math.hypot(cx, cy);
+        const out = [];
+        for (let i = 0; i < n; i++) {
+          const pct = u + (i / n) * (ctl.spacing / 100) + ctl.moveCarousel / 100;
+          const [x, y] = pointOnPath(pct);
+          const projected = (x - cx) * Math.sin(dAng) + (y - cy) * Math.cos(dAng);
+          const depthScale = linear((projected / maxDist + 1) / 2, 0, 1, ctl.scaleMin, 100);
+          const mixed = linear(ctl.scaleDepth / 100, 0, 1, 100, depthScale);
+          out.push({ x, y, scale: (mixed * (ctl.globalScale / 100)) / 100 });
+        }
+        return out;
+      }
+
+      // After Effects keyframe curve (cubic bezier in time/value), repeated and accumulated after its last key.
+      function accumulatingCurve(keys) {
+        const segs = [];
+        for (let i = 0; i < keys.length - 1; i++) {
+          const a = keys[i],
+            b = keys[i + 1],
+            T = b.time - a.time;
+          const lo = a.easeOut.influence * T,
+            li = b.easeIn.influence * T;
+          segs.push({
+            t0: a.time,
+            t1: b.time,
+            P0: [a.time, a.value],
+            P1: [a.time + lo, a.value + a.easeOut.speed * lo],
+            P2: [b.time - li, b.value - b.easeIn.speed * li],
+            P3: [b.time, b.value],
+          });
+        }
+        const bez = (p0, p1, p2, p3, s) => {
+          const m = 1 - s;
+          return m * m * m * p0 + 3 * m * m * s * p1 + 3 * m * s * s * p2 + s * s * s * p3;
+        };
+        function at(t) {
+          if (t <= segs[0].t0) return keys[0].value;
+          const sg = segs.find((g) => t <= g.t1) || segs[segs.length - 1];
+          if (t >= sg.t1) return sg.P3[1];
+          let s = (t - sg.t0) / (sg.t1 - sg.t0);
+          for (let k = 0; k < 8; k++) {
+            const x = bez(sg.P0[0], sg.P1[0], sg.P2[0], sg.P3[0], s) - t;
+            const m = 1 - s;
+            const dx =
+              3 * m * m * (sg.P1[0] - sg.P0[0]) + 6 * m * s * (sg.P2[0] - sg.P1[0]) + 3 * s * s * (sg.P3[0] - sg.P2[0]);
+            if (Math.abs(dx) < 1e-9) break;
+            s = clamp01(s - x / dx);
+          }
+          return bez(sg.P0[1], sg.P1[1], sg.P2[1], sg.P3[1], s);
+        }
+        const first = keys[0],
+          lastKey = keys[keys.length - 1];
+        const T = lastKey.time - first.time,
+          delta = lastKey.value - first.value;
+        return (t) => {
+          const k = Math.floor(t / T);
+          return at(first.time + (t - k * T)) + k * delta;
+        };
+      }
+
+      const DATA = {
+        controls: {
+          speed: 40,
+          spacing: 100,
+          globalScale: 80,
+          scaleDepth: 160,
+          scaleMin: -47,
+          depthAngle: 37,
+          moveCarousel: 42.55,
+        },
+        // Drawn at 2x and scaled down to the 1080x1920 frame.
+        comp: { width: 2160, height: 3840, outWidth: 1080, outHeight: 1920, duration: 3.1 },
+        // Fallback sizes until each image decodes.
+        cards: ["546.jpg", "334.jpg", "502.jpg", "395.jpg", "545.jpg", "510.jpg", "419.jpg"],
+        imageVars: ["image1", "image2", "image3", "image4", "image5", "image6", "image7"],
+        pathScale: 0.95,
+        path: [
+          { p: [2246.001, 365.023], in: [-358.618, 0], out: [358.618, 0] },
+          { p: [2895.342, 1170.206], in: [0, -444.686], out: [0, 444.686] },
+          { p: [2246.001, 1975.388], in: [358.618, 0], out: [-358.618, 0] },
+          { p: [1596.66, 1170.206], in: [0, 444.686], out: [0, -444.686] },
+        ],
+        moveKeys: [
+          { time: 0, value: 0, easeIn: { speed: 0, influence: 0.333333 }, easeOut: { speed: 238.51658, influence: 0.124734 } },
+          { time: 1.51667, value: 75.5, easeIn: { speed: 563.152726, influence: 0.063927 }, easeOut: { speed: 0, influence: 0.333333 } },
+        ],
+        speedScale: 0.6, // < 1 slows the whole carousel
+        entry: { start: 0.2, staggerTotal: 0.45, duration: 0.55 }, // cards pop in one by one from 0.2 s
+        fitBox: 1500, // longest card side, before depth scaling
+      };
+
+      (async function () {
+        const { controls: ctl, comp } = DATA;
+        const n = DATA.cards.length;
+        const V = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+        const varUrl = (v) => (v && typeof v === "object" ? v.url || v.src || "" : v || "");
+        const cards = await Promise.all(
+          DATA.imageVars.map(async (id, i) => {
+            const img = new Image();
+            img.src = varUrl(V[id]) || "assets/img/" + DATA.cards[i];
+            try {
+              await img.decode();
+            } catch (e) {}
+            return { src: img.src, width: img.naturalWidth || 936, height: img.naturalHeight || 527 };
+          }),
+        );
+
+        const root = document.getElementById("root");
+        root.style.setProperty("--card-radius", "0px");
+        root.style.setProperty("--card-shadow", "none");
+        document.getElementById("carousel-circle-2-scaler").style.transform = "scale(" + comp.outWidth / comp.width + ")";
+        const stage = document.getElementById("carousel-circle-2-stage");
+
+        const els = [],
+          inners = [];
+        cards.forEach((c, i) => {
+          const k = DATA.fitBox / Math.max(c.width, c.height);
+          const w = c.width * k,
+            h = c.height * k;
+          const el = document.createElement("div");
+          el.className = "card";
+          el.id = "carousel-circle-2-card-" + i;
+          el.style.width = w + "px";
+          el.style.height = h + "px";
+          el.style.marginLeft = -w / 2 + "px";
+          el.style.marginTop = -h / 2 + "px";
+          el.style.zIndex = String(n - i);
+          const inner = document.createElement("div");
+          inner.className = "card-inner";
+          inner.id = el.id + "-inner";
+          const img = document.createElement("img");
+          img.src = c.src;
+          img.alt = "";
+          inner.appendChild(img);
+          el.appendChild(inner);
+          stage.appendChild(el);
+          els.push(el);
+          inners.push(inner);
+        });
+
+        const s = DATA.pathScale;
+        const pointOnPath = buildPath(
+          DATA.path.map((v) => ({ p: [v.p[0] * s, v.p[1] * s], in: [v.in[0] * s, v.in[1] * s], out: [v.out[0] * s, v.out[1] * s] })),
+          [comp.width / 2, comp.height / 2],
+        );
+        const move = accumulatingCurve(DATA.moveKeys);
+
+        function render(t) {
+          const tt = t * DATA.speedScale;
+          const c = Object.assign({}, ctl, { moveCarousel: move(tt) });
+          circlePoses(pointOnPath, c, comp, n, (ctl.speed / 1000) * tt).forEach((p, i) => {
+            els[i].style.transform =
+              "translate3d(" + p.x.toFixed(2) + "px," + p.y.toFixed(2) + "px,0.00px) scale(" + p.scale.toFixed(5) + ")";
+          });
+        }
+
+        const clock = { t: 0 };
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo(clock, { t: 0 }, { t: comp.duration, duration: comp.duration, ease: "none", onUpdate: () => render(clock.t) }, 0);
+        const E = DATA.entry;
+        inners.forEach((inner, i) => {
+          tl.fromTo(
+            inner,
+            { autoAlpha: 0, scale: 0.72 },
+            { autoAlpha: 1, scale: 1, duration: E.duration, ease: "power3.out", immediateRender: true },
+            E.start + (i * E.staggerTotal) / n,
+          );
+        });
+        tl.fromTo("#cc-white", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.in", immediateRender: true }, 2.75);
+        render(0);
+        window.__timelines["carousel-circle-2"] = tl;
+      })();
+    </script>
+  </body>
+</html>

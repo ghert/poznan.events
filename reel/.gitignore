@@ -1,0 +1,7 @@
+.hyperframes/
+.thumbnails/
+renders/
+node_modules/
+# Event images: added per reel, never committed.
+assets/img/*
+!assets/img/.gitkeep

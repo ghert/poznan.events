@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone HyperFrames project, not part of the app.
+    "reel/**",
   ]),
 ]);
 
